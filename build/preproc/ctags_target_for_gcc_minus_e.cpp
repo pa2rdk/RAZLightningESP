@@ -1,18 +1,18 @@
-# 1 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+# 1 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 //RAZLightning.ino v3.0 10/12/2019
 //Placed on GITHUB Aug. 1 2018
 //By R.J. de Kok - (c) 2019
 
-# 6 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 7 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 8 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 9 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 10 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 11 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 12 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 6 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 7 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 8 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 9 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 10 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 11 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 12 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
 
-# 14 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 15 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 14 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 15 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
 
 #define CE 15
 #define DC 2
@@ -83,9 +83,9 @@ struct StoreStruct {
 };
 
 StoreStruct storage = {
-  '#',
-  "MARODEKExtender",
-  "0919932003",
+  '@',
+  "MARODEKWiFi",
+  "MAROWiFi19052004!",
   "PA2RDK",
   "mqtt.rjdekok.nl",
   "Robert",
@@ -157,9 +157,9 @@ Adafruit_ST7735 display = Adafruit_ST7735(15, 2, 10);
 WiFiClient net;
 MQTTClient client;
 hw_timer_t *timeTimer = 
-# 158 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 3 4
+# 158 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 3 4
                        __null
-# 158 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+# 158 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
                            ;
 
 const unsigned char lightning_bmp[32] = {
@@ -314,6 +314,9 @@ void loop()
 
  myButton = analogRead(34 /* Bij smalle ESP32 36*/);
  if (myButton < 500) {
+  float startButton = millis();
+  while (analogRead(34 /* Bij smalle ESP32 36*/) < 500) {}
+  if (millis()-startButton>5000) esp_restart();
   fromSource = 1;
   handleMenu(myButton);
  }
@@ -339,6 +342,7 @@ void loop()
    lastDayOfWeek = dayOfWeek;
    moveDays();
   }
+  dispData();
  }
 
  if (heartBeatCounter == 60) {
@@ -1039,6 +1043,7 @@ void setup()
  Serial.println(((reinterpret_cast<const __FlashStringHelper *>(("Start MQTT")))));
  client.begin(storage.mqtt_broker, storage.mqtt_port, net);
  //client.onMessage(messageReceived);
+ Serial.println(((reinterpret_cast<const __FlashStringHelper *>(("Start WiFi")))));
  display.println(((reinterpret_cast<const __FlashStringHelper *>(("Start WiFi")))));
  check_connection();
  getNTPData();
@@ -1119,6 +1124,7 @@ void configure_timer() {
 }
 
 boolean check_connection() {
+ updCounter = 0;
  if (WiFi.status() != WL_CONNECTED) {
   InitWiFiConnection();
  }
@@ -1133,6 +1139,7 @@ boolean check_connection() {
 
 void InitWiFiConnection() {
  WlanReset();
+ Serial.println(((reinterpret_cast<const __FlashStringHelper *>(("Reset WiFi")))));
 
  while (((WiFi.status()) != WL_CONNECTED)){
   Serial.print(".");

@@ -2,195 +2,195 @@
   {
     "Sourcefile": null,
     "Include": "",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/cores/esp32"
+    "Includepath": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/cores/esp32"
   },
   {
     "Sourcefile": null,
     "Include": "",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/variants/esp32"
+    "Includepath": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/variants/esp32"
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
     "Include": "SparkFun_AS3935.h",
-    "Includepath": "/home/robert/Dropbox/Arduino-workspace/libraries/SparkFun_AS3935_Lightning_Detector_Arduino_Library-1.4.0/src"
+    "Includepath": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/SparkFun_AS3935_Lightning_Detector_Arduino_Library-1.4.0/src"
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
     "Include": "Wire.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/Wire/src"
+    "Includepath": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/Wire/src"
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
     "Include": "SPI.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/SPI/src"
+    "Includepath": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/SPI/src"
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
     "Include": "EEPROM.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/EEPROM/src"
+    "Includepath": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/EEPROM/src"
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
     "Include": "WiFi.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src"
+    "Includepath": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src"
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
     "Include": "HTTPClient.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/HTTPClient/src"
+    "Includepath": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/HTTPClient/src"
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
     "Include": "WiFiClientSecure.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFiClientSecure/src"
+    "Includepath": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFiClientSecure/src"
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
     "Include": "ArduinoJson.h",
-    "Includepath": "/home/robert/Dropbox/Arduino-workspace/libraries/ArduinoJson/src"
+    "Includepath": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/ArduinoJson/src"
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
     "Include": "MQTT.h",
-    "Includepath": "/home/robert/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src"
+    "Includepath": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src"
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
     "Include": "Adafruit_GFX.h",
-    "Includepath": "/home/robert/Dropbox/Arduino-workspace/libraries/Adafruit_GFX_Library"
+    "Includepath": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/Adafruit_GFX_Library"
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
     "Include": "Adafruit_ST7735.h",
-    "Includepath": "/home/robert/Dropbox/Arduino-workspace/libraries/Adafruit-ST7735-Library-master"
+    "Includepath": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/Adafruit-ST7735-Library-master"
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/SparkFun_AS3935_Lightning_Detector_Arduino_Library-1.4.0/src/SparkFun_AS3935.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/SparkFun_AS3935_Lightning_Detector_Arduino_Library-1.4.0/src/SparkFun_AS3935.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/Wire/src/Wire.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/Wire/src/Wire.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/SPI/src/SPI.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/SPI/src/SPI.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/EEPROM/src/EEPROM.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/EEPROM/src/EEPROM.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/ETH.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/ETH.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFi.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFi.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiAP.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiAP.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiClient.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiClient.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiGeneric.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiGeneric.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiMulti.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiMulti.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiSTA.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiSTA.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiScan.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiScan.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiServer.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiServer.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiUdp.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFi/src/WiFiUdp.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/HTTPClient/src/HTTPClient.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/HTTPClient/src/HTTPClient.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFiClientSecure/src/WiFiClientSecure.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFiClientSecure/src/WiFiClientSecure.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFiClientSecure/src/ssl_client.cpp",
+    "Sourcefile": "/Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFiClientSecure/src/ssl_client.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src/MQTTClient.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src/MQTTClient.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src/lwmqtt/client.c",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src/lwmqtt/client.c",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src/lwmqtt/helpers.c",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src/lwmqtt/helpers.c",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src/lwmqtt/packet.c",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src/lwmqtt/packet.c",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src/lwmqtt/string.c",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src/lwmqtt/string.c",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/Adafruit_GFX_Library/Adafruit_GFX.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/Adafruit_GFX_Library/Adafruit_GFX.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/Adafruit_GFX_Library/glcdfont.c",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/Adafruit_GFX_Library/glcdfont.c",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/Adafruit-ST7735-Library-master/Adafruit_ST7735.cpp",
+    "Sourcefile": "/Users/robertdekok/Dropbox/Arduino-workspace/libraries/Adafruit-ST7735-Library-master/Adafruit_ST7735.cpp",
     "Include": "",
     "Includepath": null
   }

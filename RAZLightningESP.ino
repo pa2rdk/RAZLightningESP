@@ -82,9 +82,9 @@ struct StoreStruct {
 };
 
 StoreStruct storage = {
-		'#',
-		"MARODEKExtender",
-		"0919932003",
+		'@',
+		"MARODEKWiFi",
+		"MAROWiFi19052004!",
 		"PA2RDK",
 		"mqtt.rjdekok.nl",
 		"Robert",
@@ -309,6 +309,9 @@ void loop()
 
 	myButton = analogRead(BUTTON);
 	if (myButton < 500) {
+		float startButton = millis();
+		while (analogRead(BUTTON) < 500) {}
+		if (millis()-startButton>5000) esp_restart();
 		fromSource = FROMMENU;
 		handleMenu(myButton);
 	}
@@ -334,6 +337,7 @@ void loop()
 			lastDayOfWeek = dayOfWeek;
 			moveDays();
 		}
+		dispData();
 	}
 
 	if (heartBeatCounter == 60) {
@@ -1034,6 +1038,7 @@ void setup()
 	Serial.println(F("Start MQTT"));
 	client.begin(storage.mqtt_broker, storage.mqtt_port, net);
 	//client.onMessage(messageReceived);
+	Serial.println(F("Start WiFi"));
 	display.println(F("Start WiFi"));
 	check_connection();
 	getNTPData();
@@ -1114,6 +1119,7 @@ void configure_timer() {
 }
 
 boolean check_connection() {
+	updCounter = 0;
 	if (WiFi.status() != WL_CONNECTED) {
 		InitWiFiConnection();
 	}
@@ -1128,6 +1134,7 @@ boolean check_connection() {
 
 void InitWiFiConnection() {
 	WlanReset();
+	Serial.println(F("Reset WiFi"));
 
 	while (((WiFi.status()) != WL_CONNECTED)){
 		Serial.print(".");
