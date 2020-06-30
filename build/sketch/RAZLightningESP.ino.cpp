@@ -7,6 +7,7 @@
 #include "SparkFun_AS3935.h"
 #include "EEPROM.h"
 #include "WiFi.h"
+#include <AutoConnect.h>
 #include "Wire.h"
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
@@ -64,8 +65,6 @@
 
 struct StoreStruct {  
 	byte chkDigit;
-	char ESP_SSID[16];
-	char ESP_PASS[27];
 	char MyCall[10];
 	char mqtt_broker[50];
 	char mqtt_user[25];
@@ -85,9 +84,7 @@ struct StoreStruct {
 };
 
 StoreStruct storage = {
-		'@',
-		"MARODEKWiFi",
-		"MAROWiFi19052004!",
+		'#',
 		"PA2RDK",
 		"mqtt.rjdekok.nl",
 		"Robert",
@@ -157,7 +154,10 @@ uint32_t ledTime = 0;
 SparkFun_AS3935 lightning(AS3935_ADDR);
 StaticJsonBuffer<200> jsonBuffer;
 Adafruit_ST7735 display = Adafruit_ST7735(CE,  DC, RST);
+
+AutoConnect portal;
 WiFiClient net;
+
 MQTTClient client;
 hw_timer_t *timeTimer = NULL;
 
@@ -188,59 +188,57 @@ void loadConfig();
 void printConfig();
 #line 405 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void setSettings(bool doAsk);
-#line 603 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 580 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void getStringValue(int length);
-#line 623 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 600 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 byte getCharValue();
-#line 644 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 621 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 int getNumericValue();
-#line 673 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 650 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void serialFlush();
-#line 682 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 659 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void handleMenu();
-#line 713 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 690 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void SingleBeep(int cnt);
-#line 723 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 700 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void handleLighting(uint8_t int_src);
-#line 806 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 783 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void moveMinutes();
-#line 824 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 801 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void moveHours();
-#line 841 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 818 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void moveDays();
-#line 858 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 835 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void showTime();
-#line 903 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 880 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void dispTime(byte line, byte dw, byte hr, byte mn, byte sc);
-#line 954 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 931 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void setup();
-#line 1086 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1065 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 bool check_AS3935();
-#line 1149 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1128 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void configure_timer();
-#line 1156 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1135 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 boolean check_connection();
-#line 1170 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
-void InitWiFiConnection();
-#line 1191 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1150 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void InitMQTTConnection();
-#line 1205 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1164 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void WlanReset();
-#line 1213 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1172 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 int WlanStatus();
-#line 1273 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1232 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void sendToSite(byte whichInt, byte dist);
-#line 1315 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1272 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void getNTPData();
-#line 1353 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1308 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printMinutes();
-#line 1388 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1343 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printHours();
-#line 1423 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1378 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printDays();
-#line 1457 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1412 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printGraph();
-#line 1477 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1432 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printArrow();
 #line 167 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void dispData() {
@@ -387,6 +385,7 @@ void printTime() {
 bool isASleep = 0;
 void loop()
 {
+	check_connection();
 	isASleep = 0;
 	if (millis()-ledTime>5000 && digitalRead(LED)==0){
 		digitalWrite(LED,1);
@@ -451,7 +450,6 @@ void loop()
 	if (heartBeatCounter == 60) {
 		hbSend = 0;
 		heartBeatCounter = 0;
-		check_connection();
 		getNTPData();
 		sendToSite(0, 0);
 	}
@@ -483,29 +481,6 @@ void printConfig() {
 
 void setSettings(bool doAsk) {
 	int i = 0;
-	Serial.print(F("SSID ("));
-	Serial.print(storage.ESP_SSID);
-	Serial.print(F("):"));
-	if (doAsk == 1) {
-		getStringValue(15);
-		if (receivedString[0] != 0) {
-			storage.ESP_SSID[0] = 0;
-			strcat(storage.ESP_SSID, receivedString);
-		}
-	}
-	Serial.println();
-
-	Serial.print(F("Password ("));
-	Serial.print(storage.ESP_PASS);
-	Serial.print(F("):"));
-	if (doAsk == 1) {
-		getStringValue(26);
-		if (receivedString[0] != 0) {
-			storage.ESP_PASS[0] = 0;
-			strcat(storage.ESP_PASS, receivedString);
-		}
-	}
-	Serial.println();
 
 	Serial.print(F("Call ("));
 	Serial.print(storage.MyCall);
@@ -1077,11 +1052,6 @@ void setup()
 		saveConfig();
 	}
 
-	// while (1==1){
-	// 	Serial.println(digitalRead(BUTTON));
-	// 	delay(1000);
-	// }
-
 	loadConfig();
 	printConfig();
 
@@ -1153,7 +1123,14 @@ void setup()
 	//client.onMessage(messageReceived);
 	Serial.println(F("Start WiFi"));
 	display.println(F("Start WiFi"));
-	check_connection();
+	if (portal.begin()) {
+      Serial.println("WiFi connected: " + WiFi.localIP().toString());
+    } else {
+		Serial.println("Connection failed");
+		while (true) {
+			yield();
+		}
+	}
 	getNTPData();
 	sendToSite(0, 0);
 	display.clear();
@@ -1234,8 +1211,9 @@ void configure_timer() {
 
 boolean check_connection() {
 	updCounter = 0;
-	if (WiFi.status() != WL_CONNECTED) {
-		InitWiFiConnection();
+	portal.handleClient();
+	if (WiFi.status() == WL_IDLE_STATUS) {
+		esp_restart();
 	}
 
 	if (WiFi.status() == WL_CONNECTED){
@@ -1244,27 +1222,6 @@ boolean check_connection() {
 		}
 	}
 	return (WiFi.status() == WL_CONNECTED) &&client.connected();
-}
-
-void InitWiFiConnection() {
-	WlanReset();
-	Serial.println(F("Reset WiFi"));
-
-	while (((WiFi.status()) != WL_CONNECTED)){
-		Serial.print(".");
-		WlanReset();
-		WiFi.begin(storage.ESP_SSID,storage.ESP_PASS);
-		delay(2000);
-	}
-
-	WlanStatus();
-
-	if (WlanStatus()==WL_CONNECTED){
-		Serial.print("WiFi Connected to: ");
-		Serial.println(storage.ESP_SSID);
-		Serial.print("IP address: ");
-		Serial.println(WiFi.localIP());
-	}
 }
 
 void InitMQTTConnection() {
@@ -1350,83 +1307,79 @@ int WlanStatus() {
 }
 
 void sendToSite(byte whichInt, byte dist) {
-	if (check_connection) {
-		HTTPClient http; //Declare an object of class HTTPClient
-		String getData = String("http://onweer.pi4raz.nl/AddEvent.php?Callsign=") +
-		String(storage.MyCall) + 
-		String("&IntType=") +
-		whichInt +
-		String("&Distance=") +
-		dist;
+	HTTPClient http; //Declare an object of class HTTPClient
+	String getData = String("http://onweer.pi4raz.nl/AddEvent.php?Callsign=") +
+	String(storage.MyCall) + 
+	String("&IntType=") +
+	whichInt +
+	String("&Distance=") +
+	dist;
 
-		Serial.println(getData);
-		http.begin(getData); //Specify request destination
-		int httpCode = http.GET(); //Send the request
-		if (httpCode > 0) { //Check the returning code
-			String payload = http.getString(); //Get the request response payload
-			Serial.println(payload); //Print the response payload
-			hbSend = 1;
-		}
-
-		JsonObject& root = jsonBuffer.createObject();
-		root["command"] = "udevice";
-		root["idx"] = storage.domoticzDevice;
-		if (dist == 0){
-			root["nvalue"] = 1;
-			root["svalue"] = String("Heartbeat");
-		}
-		else{
-			root["nvalue"] = 3;
-			root["svalue"] = String("Onweer op ") + String(dist) + String(" KM");
-		}
-		
-
-		root.printTo(Serial);
-
-		char jsonChar[100];
-		root.printTo((char*)jsonChar, root.measureLength() + 1);
-
-		client.publish("domoticz/in", (char*)jsonChar,0,1);
-		jsonBuffer.clear();
+	Serial.println(getData);
+	http.begin(getData); //Specify request destination
+	int httpCode = http.GET(); //Send the request
+	if (httpCode > 0) { //Check the returning code
+		String payload = http.getString(); //Get the request response payload
+		Serial.println(payload); //Print the response payload
+		hbSend = 1;
 	}
+
+	JsonObject& root = jsonBuffer.createObject();
+	root["command"] = "udevice";
+	root["idx"] = storage.domoticzDevice;
+	if (dist == 0){
+		root["nvalue"] = 1;
+		root["svalue"] = String("Heartbeat");
+	}
+	else{
+		root["nvalue"] = 3;
+		root["svalue"] = String("Onweer op ") + String(dist) + String(" KM");
+	}
+	
+
+	root.printTo(Serial);
+
+	char jsonChar[100];
+	root.printTo((char*)jsonChar, root.measureLength() + 1);
+
+	client.publish("domoticz/in", (char*)jsonChar,0,1);
+	jsonBuffer.clear();
 }
 
 void getNTPData() {
-	if (check_connection) {
-		HTTPClient http; //Declare an object of class HTTPClient
-		http.begin("http://divs.rjdekok.nl/getTime.php"); //Specify request destination
-		int httpCode = http.GET(); //Send the request
-		if (httpCode > 0) { //Check the returning code
-			String payload = http.getString(); //Get the request response payload
-			Serial.println(payload); //Print the response payload
-	        JsonObject& root = jsonBuffer.parseObject(payload);
-			if (root.success()){
-				String dow = root["Time"][0]; 
-				int year = root["Time"][1];
-				int month = root["Time"][2];
-				int day = root["Time"][3];
-				hour = root["Time"][4];
-				minute = root["Time"][5];
-				second = root["Time"][6];		
+	HTTPClient http; //Declare an object of class HTTPClient
+	http.begin("http://divs.rjdekok.nl/getTime.php"); //Specify request destination
+	int httpCode = http.GET(); //Send the request
+	if (httpCode > 0) { //Check the returning code
+		String payload = http.getString(); //Get the request response payload
+		Serial.println(payload); //Print the response payload
+		JsonObject& root = jsonBuffer.parseObject(payload);
+		if (root.success()){
+			String dow = root["Time"][0]; 
+			int year = root["Time"][1];
+			int month = root["Time"][2];
+			int day = root["Time"][3];
+			hour = root["Time"][4];
+			minute = root["Time"][5];
+			second = root["Time"][6];		
 
-				if (dow=="Sun") dayOfWeek = 1;
-				if (dow=="Mon") dayOfWeek = 2;
-				if (dow=="Tue") dayOfWeek = 3;
-				if (dow=="Wed") dayOfWeek = 4;
-				if (dow=="Thu") dayOfWeek = 5;
-				if (dow=="Fri") dayOfWeek = 6;
-				if (dow=="Sat") dayOfWeek = 7;
+			if (dow=="Sun") dayOfWeek = 1;
+			if (dow=="Mon") dayOfWeek = 2;
+			if (dow=="Tue") dayOfWeek = 3;
+			if (dow=="Wed") dayOfWeek = 4;
+			if (dow=="Thu") dayOfWeek = 5;
+			if (dow=="Fri") dayOfWeek = 6;
+			if (dow=="Sat") dayOfWeek = 7;
 
-				hour = hour + storage.timeCorrection;
-				if (hour > 23) {
-					hour = hour - 24;
-					dayOfWeek++;
-					if (dayOfWeek > 7) dayOfWeek = 1;
-				}
+			hour = hour + storage.timeCorrection;
+			if (hour > 23) {
+				hour = hour - 24;
+				dayOfWeek++;
+				if (dayOfWeek > 7) dayOfWeek = 1;
 			}
-			jsonBuffer.clear();
 		}
-    }
+		jsonBuffer.clear();
+	}
 }
 
 void printMinutes() {

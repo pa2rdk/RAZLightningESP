@@ -183,42 +183,27 @@
  /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/WiFiUdp.h \
  /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/cores/esp32/Udp.h \
  /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/cores/esp32/cbuf.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/HTTPClient/src/HTTPClient.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/WiFiClient.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFiClientSecure/src/WiFiClientSecure.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFiClientSecure/src/ssl_client.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/platform.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/esp_config.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/esp_mem.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/check_config.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/platform_time.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/net.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/net_sockets.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ssl.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/bignum.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ecp.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ssl_ciphersuites.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/pk.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/md.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/rsa.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ecdsa.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/cipher.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/x509_crt.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/x509.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/asn1.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/x509_crl.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/dhm.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ecdh.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/debug.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ssl.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/entropy.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/sha512.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ctr_drbg.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/aes.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/aes_alt.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/esp32/hwcrypto/aes.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/esp32/rom/aes.h \
- /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/error.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnect.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/DNSServer/src/DNSServer.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/WiFiUdp.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WebServer/src/WebServer.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WebServer/src/HTTP_Method.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WebServer/src/detail/RequestHandler.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/PageBuilder/src/PageBuilder.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectDefs.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectPage.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectLabels.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectCredential.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/esp32/esp_wifi.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/esp32/esp_private/esp_wifi_private.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/esp32/esp_wifi_crypto_types.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/esp32/esp_wifi_os_adapter.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/Preferences/src/Preferences.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/nvs_flash/nvs.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectAux.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectElement.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectElementBasis.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectUpload.h \
  /Users/robertdekok/Dropbox/Arduino-workspace/libraries/ArduinoJson/src/ArduinoJson.h \
  /Users/robertdekok/Dropbox/Arduino-workspace/libraries/ArduinoJson/src/ArduinoJson.hpp \
  /Users/robertdekok/Dropbox/Arduino-workspace/libraries/ArduinoJson/src/ArduinoJson/DynamicJsonBuffer.hpp \
@@ -298,6 +283,54 @@
  /Users/robertdekok/Dropbox/Arduino-workspace/libraries/ArduinoJson/src/ArduinoJson/Polyfills/parseFloat.hpp \
  /Users/robertdekok/Dropbox/Arduino-workspace/libraries/ArduinoJson/src/ArduinoJson/Polyfills/parseInteger.hpp \
  /Users/robertdekok/Dropbox/Arduino-workspace/libraries/ArduinoJson/src/ArduinoJson/Serialization/JsonSerializerImpl.hpp \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectElementJson.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectJsonDefs.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectTicker.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/Ticker/src/Ticker.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectUpdate.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/HTTPClient/src/HTTPClient.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFi/src/WiFiClient.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFiClientSecure/src/WiFiClientSecure.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/WiFiClientSecure/src/ssl_client.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/platform.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/esp_config.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/esp_mem.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/check_config.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/platform_time.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/net.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/net_sockets.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ssl.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/bignum.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ecp.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ssl_ciphersuites.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/pk.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/md.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/rsa.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ecdsa.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/cipher.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/x509_crt.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/x509.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/asn1.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/x509_crl.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/dhm.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ecdh.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/debug.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ssl.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/entropy.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/sha512.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/ctr_drbg.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/aes.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/aes_alt.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/esp32/hwcrypto/aes.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/esp32/rom/aes.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/mbedtls/mbedtls/error.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/HTTPUpdate/src/HTTPUpdate.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/libraries/Update/src/Update.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/cores/esp32/MD5Builder.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/esp32/rom/md5_hash.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/spi_flash/esp_partition.h \
+ /Users/robertdekok/Library/Arduino15/packages/esp32/hardware/esp32/1.0.4/tools/sdk/include/spi_flash/esp_spi_flash.h \
+ /Users/robertdekok/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnect.h \
  /Users/robertdekok/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src/MQTT.h \
  /Users/robertdekok/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src/MQTTClient.h \
  /Users/robertdekok/Dropbox/Arduino-workspace/libraries/arduino-mqtt-master/src/lwmqtt/lwmqtt.h \

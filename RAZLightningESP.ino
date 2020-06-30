@@ -5,6 +5,7 @@
 #include "SparkFun_AS3935.h"
 #include "EEPROM.h"
 #include "WiFi.h"
+#include <AutoConnect.h>
 #include "Wire.h"
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
@@ -62,8 +63,6 @@
 
 struct StoreStruct {  
 	byte chkDigit;
-	char ESP_SSID[16];
-	char ESP_PASS[27];
 	char MyCall[10];
 	char mqtt_broker[50];
 	char mqtt_user[25];
@@ -83,9 +82,7 @@ struct StoreStruct {
 };
 
 StoreStruct storage = {
-		'@',
-		"MARODEKWiFi",
-		"MAROWiFi19052004!",
+		'#',
 		"PA2RDK",
 		"mqtt.rjdekok.nl",
 		"Robert",
@@ -155,7 +152,10 @@ uint32_t ledTime = 0;
 SparkFun_AS3935 lightning(AS3935_ADDR);
 StaticJsonBuffer<200> jsonBuffer;
 Adafruit_ST7735 display = Adafruit_ST7735(CE,  DC, RST);
+
+AutoConnect portal;
 WiFiClient net;
+
 MQTTClient client;
 hw_timer_t *timeTimer = NULL;
 
@@ -308,6 +308,7 @@ void printTime() {
 bool isASleep = 0;
 void loop()
 {
+	check_connection();
 	isASleep = 0;
 	if (millis()-ledTime>5000 && digitalRead(LED)==0){
 		digitalWrite(LED,1);
@@ -372,7 +373,6 @@ void loop()
 	if (heartBeatCounter == 60) {
 		hbSend = 0;
 		heartBeatCounter = 0;
-		check_connection();
 		getNTPData();
 		sendToSite(0, 0);
 	}
@@ -404,29 +404,6 @@ void printConfig() {
 
 void setSettings(bool doAsk) {
 	int i = 0;
-	Serial.print(F("SSID ("));
-	Serial.print(storage.ESP_SSID);
-	Serial.print(F("):"));
-	if (doAsk == 1) {
-		getStringValue(15);
-		if (receivedString[0] != 0) {
-			storage.ESP_SSID[0] = 0;
-			strcat(storage.ESP_SSID, receivedString);
-		}
-	}
-	Serial.println();
-
-	Serial.print(F("Password ("));
-	Serial.print(storage.ESP_PASS);
-	Serial.print(F("):"));
-	if (doAsk == 1) {
-		getStringValue(26);
-		if (receivedString[0] != 0) {
-			storage.ESP_PASS[0] = 0;
-			strcat(storage.ESP_PASS, receivedString);
-		}
-	}
-	Serial.println();
 
 	Serial.print(F("Call ("));
 	Serial.print(storage.MyCall);
@@ -998,11 +975,6 @@ void setup()
 		saveConfig();
 	}
 
-	// while (1==1){
-	// 	Serial.println(digitalRead(BUTTON));
-	// 	delay(1000);
-	// }
-
 	loadConfig();
 	printConfig();
 
@@ -1074,7 +1046,14 @@ void setup()
 	//client.onMessage(messageReceived);
 	Serial.println(F("Start WiFi"));
 	display.println(F("Start WiFi"));
-	check_connection();
+	if (portal.begin()) {
+      Serial.println("WiFi connected: " + WiFi.localIP().toString());
+    } else {
+		Serial.println("Connection failed");
+		while (true) {
+			yield();
+		}
+	}
 	getNTPData();
 	sendToSite(0, 0);
 	display.clear();
@@ -1155,8 +1134,9 @@ void configure_timer() {
 
 boolean check_connection() {
 	updCounter = 0;
-	if (WiFi.status() != WL_CONNECTED) {
-		InitWiFiConnection();
+	portal.handleClient();
+	if (WiFi.status() == WL_IDLE_STATUS) {
+		esp_restart();
 	}
 
 	if (WiFi.status() == WL_CONNECTED){
@@ -1165,27 +1145,6 @@ boolean check_connection() {
 		}
 	}
 	return (WiFi.status() == WL_CONNECTED) &&client.connected();
-}
-
-void InitWiFiConnection() {
-	WlanReset();
-	Serial.println(F("Reset WiFi"));
-
-	while (((WiFi.status()) != WL_CONNECTED)){
-		Serial.print(".");
-		WlanReset();
-		WiFi.begin(storage.ESP_SSID,storage.ESP_PASS);
-		delay(2000);
-	}
-
-	WlanStatus();
-
-	if (WlanStatus()==WL_CONNECTED){
-		Serial.print("WiFi Connected to: ");
-		Serial.println(storage.ESP_SSID);
-		Serial.print("IP address: ");
-		Serial.println(WiFi.localIP());
-	}
 }
 
 void InitMQTTConnection() {
@@ -1271,83 +1230,79 @@ int WlanStatus() {
 }
 
 void sendToSite(byte whichInt, byte dist) {
-	if (check_connection) {
-		HTTPClient http; //Declare an object of class HTTPClient
-		String getData = String("http://onweer.pi4raz.nl/AddEvent.php?Callsign=") +
-		String(storage.MyCall) + 
-		String("&IntType=") +
-		whichInt +
-		String("&Distance=") +
-		dist;
+	HTTPClient http; //Declare an object of class HTTPClient
+	String getData = String("http://onweer.pi4raz.nl/AddEvent.php?Callsign=") +
+	String(storage.MyCall) + 
+	String("&IntType=") +
+	whichInt +
+	String("&Distance=") +
+	dist;
 
-		Serial.println(getData);
-		http.begin(getData); //Specify request destination
-		int httpCode = http.GET(); //Send the request
-		if (httpCode > 0) { //Check the returning code
-			String payload = http.getString(); //Get the request response payload
-			Serial.println(payload); //Print the response payload
-			hbSend = 1;
-		}
-
-		JsonObject& root = jsonBuffer.createObject();
-		root["command"] = "udevice";
-		root["idx"] = storage.domoticzDevice;
-		if (dist == 0){
-			root["nvalue"] = 1;
-			root["svalue"] = String("Heartbeat");
-		}
-		else{
-			root["nvalue"] = 3;
-			root["svalue"] = String("Onweer op ") + String(dist) + String(" KM");
-		}
-		
-
-		root.printTo(Serial);
-
-		char jsonChar[100];
-		root.printTo((char*)jsonChar, root.measureLength() + 1);
-
-		client.publish("domoticz/in", (char*)jsonChar,0,1);
-		jsonBuffer.clear();
+	Serial.println(getData);
+	http.begin(getData); //Specify request destination
+	int httpCode = http.GET(); //Send the request
+	if (httpCode > 0) { //Check the returning code
+		String payload = http.getString(); //Get the request response payload
+		Serial.println(payload); //Print the response payload
+		hbSend = 1;
 	}
+
+	JsonObject& root = jsonBuffer.createObject();
+	root["command"] = "udevice";
+	root["idx"] = storage.domoticzDevice;
+	if (dist == 0){
+		root["nvalue"] = 1;
+		root["svalue"] = String("Heartbeat");
+	}
+	else{
+		root["nvalue"] = 3;
+		root["svalue"] = String("Onweer op ") + String(dist) + String(" KM");
+	}
+	
+
+	root.printTo(Serial);
+
+	char jsonChar[100];
+	root.printTo((char*)jsonChar, root.measureLength() + 1);
+
+	client.publish("domoticz/in", (char*)jsonChar,0,1);
+	jsonBuffer.clear();
 }
 
 void getNTPData() {
-	if (check_connection) {
-		HTTPClient http; //Declare an object of class HTTPClient
-		http.begin("http://divs.rjdekok.nl/getTime.php"); //Specify request destination
-		int httpCode = http.GET(); //Send the request
-		if (httpCode > 0) { //Check the returning code
-			String payload = http.getString(); //Get the request response payload
-			Serial.println(payload); //Print the response payload
-	        JsonObject& root = jsonBuffer.parseObject(payload);
-			if (root.success()){
-				String dow = root["Time"][0]; 
-				int year = root["Time"][1];
-				int month = root["Time"][2];
-				int day = root["Time"][3];
-				hour = root["Time"][4];
-				minute = root["Time"][5];
-				second = root["Time"][6];		
+	HTTPClient http; //Declare an object of class HTTPClient
+	http.begin("http://divs.rjdekok.nl/getTime.php"); //Specify request destination
+	int httpCode = http.GET(); //Send the request
+	if (httpCode > 0) { //Check the returning code
+		String payload = http.getString(); //Get the request response payload
+		Serial.println(payload); //Print the response payload
+		JsonObject& root = jsonBuffer.parseObject(payload);
+		if (root.success()){
+			String dow = root["Time"][0]; 
+			int year = root["Time"][1];
+			int month = root["Time"][2];
+			int day = root["Time"][3];
+			hour = root["Time"][4];
+			minute = root["Time"][5];
+			second = root["Time"][6];		
 
-				if (dow=="Sun") dayOfWeek = 1;
-				if (dow=="Mon") dayOfWeek = 2;
-				if (dow=="Tue") dayOfWeek = 3;
-				if (dow=="Wed") dayOfWeek = 4;
-				if (dow=="Thu") dayOfWeek = 5;
-				if (dow=="Fri") dayOfWeek = 6;
-				if (dow=="Sat") dayOfWeek = 7;
+			if (dow=="Sun") dayOfWeek = 1;
+			if (dow=="Mon") dayOfWeek = 2;
+			if (dow=="Tue") dayOfWeek = 3;
+			if (dow=="Wed") dayOfWeek = 4;
+			if (dow=="Thu") dayOfWeek = 5;
+			if (dow=="Fri") dayOfWeek = 6;
+			if (dow=="Sat") dayOfWeek = 7;
 
-				hour = hour + storage.timeCorrection;
-				if (hour > 23) {
-					hour = hour - 24;
-					dayOfWeek++;
-					if (dayOfWeek > 7) dayOfWeek = 1;
-				}
+			hour = hour + storage.timeCorrection;
+			if (hour > 23) {
+				hour = hour - 24;
+				dayOfWeek++;
+				if (dayOfWeek > 7) dayOfWeek = 1;
 			}
-			jsonBuffer.clear();
 		}
-    }
+		jsonBuffer.clear();
+	}
 }
 
 void printMinutes() {
