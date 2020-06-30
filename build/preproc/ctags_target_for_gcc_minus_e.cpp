@@ -17,6 +17,7 @@
 #define CE 15
 #define DC 2
 #define RST 10
+#define LED 4
 #define lineHeight 8
 #define LINECLR 0xF800
 #define GRFCLR 0x07FF
@@ -105,7 +106,6 @@ StoreStruct storage = {
 };
 
 char receivedString[128];
-int myButton = 0;
 char chkGS[3] = "GS";
 
 byte minutes[60];
@@ -140,6 +140,7 @@ struct histData {
 histData lastData[10];
 
 byte second = 0;
+byte lastSecond = 0;
 byte minute = 0;
 byte lastMinute = 0;
 byte hour = 0;
@@ -150,6 +151,7 @@ byte fromSource = 0;
 byte startPos = 0;
 byte height;
 byte btnPressed = 0;
+uint32_t ledTime = 0;
 
 SparkFun_AS3935 lightning(0x03);
 StaticJsonBuffer<200> jsonBuffer;
@@ -157,9 +159,9 @@ Adafruit_ST7735 display = Adafruit_ST7735(15, 2, 10);
 WiFiClient net;
 MQTTClient client;
 hw_timer_t *timeTimer = 
-# 158 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 3 4
+# 160 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 3 4
                        __null
-# 158 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+# 160 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
                            ;
 
 const unsigned char lightning_bmp[32] = {
@@ -176,6 +178,8 @@ void dispData() {
  if (storage.dispScreen == 5) printMinutes();
  if (storage.dispScreen == 6) printHours();
  if (storage.dispScreen == 7) printDays();
+ digitalWrite(4,0);
+ ledTime = millis();
 }
 
 void printLogo() {
@@ -306,19 +310,45 @@ void printTime() {
  display.print(days[0]);
 }
 
+bool isASleep = 0;
 void loop()
 {
+ isASleep = 0;
+ if (millis()-ledTime>5000 && digitalRead(4)==0){
+  digitalWrite(4,1);
+  isASleep = 1;
+  esp_light_sleep_start();
+ }
+
+ if (isASleep == 1){
+  isASleep = 0;
+  getNTPData();
+ }
+
+ if (second != lastSecond){
+  Serial.print('.');
+  lastSecond = second;
+ }
+
     updCounter = 0;
  fromSource = 3;
  delay(5);
 
- myButton = analogRead(34 /* Bij smalle ESP32 36*/);
- if (myButton < 500) {
+ if (digitalRead(34 /* Bij smalle ESP32 36*/) == 1) {
   float startButton = millis();
-  while (analogRead(34 /* Bij smalle ESP32 36*/) < 500) {}
-  if (millis()-startButton>5000) esp_restart();
+  bool hasBeeped = 0;
+  while (digitalRead(34 /* Bij smalle ESP32 36*/) == 1) {
+   if (!hasBeeped){
+    SingleBeep(1);
+    hasBeeped = 1;
+   }
+   if (millis()-startButton>5000){
+    SingleBeep(5);
+    esp_restart();
+   }
+  }
   fromSource = 1;
-  handleMenu(myButton);
+  if (digitalRead(4)==0) handleMenu();
  }
 
  int intVal = 0;
@@ -342,7 +372,6 @@ void loop()
    lastDayOfWeek = dayOfWeek;
    moveDays();
   }
-  dispData();
  }
 
  if (heartBeatCounter == 60) {
@@ -617,7 +646,7 @@ byte getCharValue() {
  return receivedString[i - 1];
 }
 
-byte getNumericValue() {
+int getNumericValue() {
  serialFlush();
  byte myByte = 0;
  byte inChar = 0;
@@ -655,26 +684,12 @@ void serialFlush() {
  }
 }
 
-void handleMenu(int btnValue) {
- if (btnValue < 1000) delay(200);
-
- btnPressed = 0;
- if (btnValue < 300) btnPressed = 2;
- if (btnValue < 50) btnPressed = 4;
+void handleMenu() {
+ delay(200);
  Serial.print(((reinterpret_cast<const __FlashStringHelper *>(("Display:"))))); Serial.println(storage.dispScreen);
- Serial.print(((reinterpret_cast<const __FlashStringHelper *>(("Button pressed:"))))); Serial.println(btnPressed);
- handleButton(btnPressed);
-}
-
-void handleButton(int btnValue) {
- if (btnValue == 4) {
-  storage.dispScreen++;
-  if (storage.dispScreen > 7) storage.dispScreen = 0;
- }
- if (btnValue == 2) {
-  storage.dispScreen--;
-  if (storage.dispScreen > 7) storage.dispScreen = 7;
- }
+ Serial.println(((reinterpret_cast<const __FlashStringHelper *>(("Button pressed:")))));
+ storage.dispScreen++;
+ if (storage.dispScreen > 7) storage.dispScreen = 0;
 }
 
 void __attribute__((section(".iram1"))) updateTime() {
@@ -788,6 +803,8 @@ void handleLighting(uint8_t int_src) {
   display.print(((reinterpret_cast<const __FlashStringHelper *>((" too high")))));
   //display.display();
  }
+ digitalWrite(4,0);
+ ledTime = millis();
  delay(500);
 }
 
@@ -942,7 +959,9 @@ void dispTime(byte line, byte dw, byte hr, byte mn, byte sc) {
 void setup()
 {
  pinMode(32, 0x02);
+ pinMode(4, 0x02);
  pinMode(25, 0x01);
+ pinMode(34 /* Bij smalle ESP32 36*/, 0x09);
 
  pinMode(10, 0x02);
  pinMode(15, 0x02);
@@ -950,6 +969,13 @@ void setup()
 
  digitalWrite(32,0);
  if (storage.beeperCnt>0) SingleBeep(2);
+
+ for (int i=0;i<3;i++){
+  digitalWrite(4,0);
+  delay(100);
+  digitalWrite(4,1);
+  delay(100);
+ }
 
  Serial.begin(115200);
  Serial.print(((reinterpret_cast<const __FlashStringHelper *>(("Playing With Fusion: AS3935 Lightning Sensor, SEN-39001-R01  v")))));
@@ -962,6 +988,7 @@ void setup()
  display.begin(84, 48, 0);
  delay(200);
  printLogo();
+ digitalWrite(4,0);
 
  if (!EEPROM.begin(200))
  {
@@ -971,10 +998,16 @@ void setup()
   Serial.println(((reinterpret_cast<const __FlashStringHelper *>(("failed to initialise EEPROM")))));
   while(1);
  }
- if (EEPROM.read(0x10) != storage.chkDigit || analogRead(34 /* Bij smalle ESP32 36*/)<500){
+ if (EEPROM.read(0x10) != storage.chkDigit || digitalRead(34 /* Bij smalle ESP32 36*/)==1){
   Serial.println(((reinterpret_cast<const __FlashStringHelper *>(("Writing defaults....")))));
   saveConfig();
  }
+
+ // while (1==1){
+ // 	Serial.println(digitalRead(BUTTON));
+ // 	delay(1000);
+ // }
+
  loadConfig();
  printConfig();
 
@@ -1006,7 +1039,8 @@ void setup()
  if( !lightning.begin() ){ // Initialize the sensor. 
   display.println(((reinterpret_cast<const __FlashStringHelper *>(("Detector not started")))));
   Serial.println ("Lightning Detector did not start up, freezing!");
-  while(1);
+  delay(5000);
+  esp_restart();
  }
 
  display.println(((reinterpret_cast<const __FlashStringHelper *>(("Set detector params")))));
@@ -1048,9 +1082,10 @@ void setup()
  check_connection();
  getNTPData();
  sendToSite(0, 0);
- myButton = analogRead(34 /* Bij smalle ESP32 36*/);
  display.clear();
  printInfo();
+ ledTime = millis();
+ esp_sleep_enable_ext1_wakeup(0x402000000,ESP_EXT1_WAKEUP_ANY_HIGH);
 }
 
 bool check_AS3935() {
