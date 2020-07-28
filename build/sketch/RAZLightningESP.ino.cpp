@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #line 1 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
-//RAZLightning.ino v3.0 10/12/2019
+//RAZLightning.ino v3.0 01/07/2020
 //Placed on GITHUB Aug. 1 2018
 //By R.J. de Kok - (c) 2019
 
