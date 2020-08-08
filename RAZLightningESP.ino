@@ -10,7 +10,6 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <MQTT.h>
-
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7735.h>
 
@@ -939,6 +938,8 @@ void setup()
 	pinMode(CE, OUTPUT);
 	pinMode(DC, OUTPUT);
 
+	configure_timer();	
+	
 	digitalWrite(BEEPER,beepOff);
 	if (storage.beeperCnt>0) SingleBeep(2);
 
@@ -1026,8 +1027,6 @@ void setup()
 		lightning.tuneCap(storage.AS3935_capacitance); 
 		setAS3935 = check_AS3935();
 	}
-	
-	configure_timer();
 
 	Serial.print(F("Clear array...."));
 	for (int i = 0; i < 10; i++) {

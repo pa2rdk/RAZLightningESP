@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#line 1 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 //RAZLightning.ino v3.0 01/07/2020
 //Placed on GITHUB Aug. 1 2018
 //By R.J. de Kok - (c) 2019
@@ -12,7 +12,6 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 #include <MQTT.h>
-
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7735.h>
 
@@ -166,81 +165,81 @@ const unsigned char PROGMEM lightning_bmp[32] = {
 		0x01, 0xC0, 0x03, 0x80, 0x07, 0xF8, 0x00, 0xF0, 0x00, 0xC0, 0x01, 0x80, 0x01, 0x00, 0x01, 0x00
 };
 
-#line 167 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 166 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void dispData();
-#line 180 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 179 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printLogo();
-#line 197 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 196 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printInfo();
-#line 218 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 217 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printStat();
-#line 242 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 241 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printHist();
-#line 260 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 259 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printTime();
-#line 309 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 308 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void loop();
-#line 384 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 383 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void saveConfig();
-#line 390 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 389 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void loadConfig();
-#line 396 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 395 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printConfig();
-#line 405 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 404 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void setSettings(bool doAsk);
-#line 580 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 579 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void getStringValue(int length);
-#line 600 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 599 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 byte getCharValue();
-#line 621 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 620 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 int getNumericValue();
-#line 650 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 649 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void serialFlush();
-#line 659 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 658 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void handleMenu();
-#line 690 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 689 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void SingleBeep(int cnt);
-#line 700 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 699 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void handleLighting(uint8_t int_src);
-#line 783 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 782 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void moveMinutes();
-#line 801 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 800 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void moveHours();
-#line 818 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 817 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void moveDays();
-#line 835 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 834 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void showTime();
-#line 880 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 879 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void dispTime(byte line, byte dw, byte hr, byte mn, byte sc);
-#line 931 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 930 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void setup();
-#line 1065 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1064 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 bool check_AS3935();
-#line 1128 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1127 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void configure_timer();
-#line 1135 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1134 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 boolean check_connection();
-#line 1150 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1149 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void InitMQTTConnection();
-#line 1164 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1163 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void WlanReset();
-#line 1172 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1171 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 int WlanStatus();
-#line 1232 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1231 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void sendToSite(byte whichInt, byte dist);
-#line 1272 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1271 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void getNTPData();
-#line 1308 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1307 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printMinutes();
-#line 1343 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1342 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printHours();
-#line 1378 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1377 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printDays();
-#line 1412 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1411 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printGraph();
-#line 1432 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 1431 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void printArrow();
-#line 167 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+#line 166 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 void dispData() {
 	if (storage.dispScreen == dispStat) printStat();
 	if (storage.dispScreen == dispHist) printHist();
@@ -1016,6 +1015,8 @@ void setup()
 	pinMode(CE, OUTPUT);
 	pinMode(DC, OUTPUT);
 
+	configure_timer();	
+	
 	digitalWrite(BEEPER,beepOff);
 	if (storage.beeperCnt>0) SingleBeep(2);
 
@@ -1103,8 +1104,6 @@ void setup()
 		lightning.tuneCap(storage.AS3935_capacitance); 
 		setAS3935 = check_AS3935();
 	}
-	
-	configure_timer();
 
 	Serial.print(F("Clear array...."));
 	for (int i = 0; i < 10; i++) {

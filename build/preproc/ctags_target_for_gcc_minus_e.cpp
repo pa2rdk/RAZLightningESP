@@ -1,19 +1,18 @@
-# 1 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+# 1 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 //RAZLightning.ino v3.0 01/07/2020
 //Placed on GITHUB Aug. 1 2018
 //By R.J. de Kok - (c) 2019
 
-# 6 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 7 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 8 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 9 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 10 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 11 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 6 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 7 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 8 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 9 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 10 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 11 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
 
-# 13 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-
-# 15 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 16 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 13 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 14 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 15 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
 
 #define CE 15
 #define DC 2
@@ -159,9 +158,9 @@ WiFiClient net;
 
 MQTTClient client;
 hw_timer_t *timeTimer = 
-# 160 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 3 4
+# 159 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 3 4
                        __null
-# 160 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+# 159 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
                            ;
 
 const unsigned char lightning_bmp[32] = {
@@ -944,6 +943,8 @@ void setup()
  pinMode(15, 0x02);
  pinMode(2, 0x02);
 
+ configure_timer();
+
  digitalWrite(32,0);
  if (storage.beeperCnt>0) SingleBeep(2);
 
@@ -1031,8 +1032,6 @@ void setup()
   lightning.tuneCap(storage.AS3935_capacitance);
   setAS3935 = check_AS3935();
  }
-
- configure_timer();
 
  Serial.print(((reinterpret_cast<const __FlashStringHelper *>(("Clear array....")))));
  for (int i = 0; i < 10; i++) {
