@@ -9,10 +9,9 @@
 # 9 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
 # 10 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
 # 11 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-
+# 12 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
 # 13 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
 # 14 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 15 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
 
 #define CE 15
 #define DC 2
@@ -63,6 +62,8 @@
 
 struct StoreStruct {
  byte chkDigit;
+ char ESP_SSID[16];
+ char ESP_PASS[27];
  char MyCall[10];
  char mqtt_broker[50];
  char mqtt_user[25];
@@ -82,13 +83,15 @@ struct StoreStruct {
 };
 
 StoreStruct storage = {
-  '#',
+  '%',
+  "Ziggo181AF5A",
+  "Ikwileenluiaard1",
   "PA2RDK",
   "mqtt.rjdekok.nl",
   "Robert",
   "Mosq5495!",
   1883,
-  234,
+  235,
   0, //indoor
   1, //enabled
   96,
@@ -111,7 +114,6 @@ byte divMinute = 1;
 byte hours[48];
 byte maxHour = 0;
 byte divHour = 1;
-byte heartBeatCounter = 58;
 
 byte days[30];
 byte maxDay = 0;
@@ -121,7 +123,7 @@ uint16_t pulses = 0;
 uint16_t distPulses = 0;
 byte minuteBeeped = 0;
 int majorVersion=3;
-int minorVersion=0; //Eerste uitlevering 15/11/2017
+int minorVersion=1; //Eerste uitlevering 15/11/2017
 bool hbSend = 0;
 int updCounter = 0;
 
@@ -152,11 +154,9 @@ uint32_t ledTime = 0;
 SparkFun_AS3935 lightning(0x03);
 StaticJsonBuffer<200> jsonBuffer;
 Adafruit_ST7735 display = Adafruit_ST7735(15, 2, 10);
-
-AutoConnect portal;
 WiFiClient net;
-
 MQTTClient client;
+HTTPClient http;
 hw_timer_t *timeTimer = 
 # 159 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 3 4
                        __null
@@ -207,7 +207,6 @@ void printInfo() {
  display.setTextSize(1);
  display.setTextColor(0xFFFF);
  display.print(((reinterpret_cast<const __FlashStringHelper *>(("  HBC=")))));
- if (hbSend==1) display.print(heartBeatCounter); else display.print(((reinterpret_cast<const __FlashStringHelper *>(("*")))));
  display.setCursor(0, 2*8);
  display.print(((reinterpret_cast<const __FlashStringHelper *>(("Call:")))));
  display.print(storage.MyCall);
@@ -312,17 +311,27 @@ void printTime() {
 bool isASleep = 0;
 void loop()
 {
- check_connection();
  isASleep = 0;
- if (millis()-ledTime>5000 && digitalRead(4)==0){
+ if (millis()-ledTime>4000 && digitalRead(4)==0){
+  Serial.println("Lets sleep");
+  delay(100);
   digitalWrite(4,1);
   isASleep = 1;
   esp_light_sleep_start();
  }
 
+    updCounter = 0;
+
  if (isASleep == 1){
   isASleep = 0;
+  if (digitalRead(4)==1){
+   digitalWrite(4,0);
+   ledTime = millis();
+  }
+  delay(100);
   getNTPData();
+  Serial.print("Awoke by:");
+  Serial.print(esp_sleep_get_wakeup_cause());
  }
 
  if (second != lastSecond){
@@ -330,7 +339,6 @@ void loop()
   lastSecond = second;
  }
 
-    updCounter = 0;
  fromSource = 3;
  delay(5);
 
@@ -360,13 +368,13 @@ void loop()
 
  if (lastMinute != minute)
  {
-  heartBeatCounter++;
   lastMinute = minute;
   fromSource = 0;
   moveMinutes();
   if (hour != lastHour) {
    lastHour = hour;
    moveHours();
+   DoHeartBeat();
   }
   if (dayOfWeek != lastDayOfWeek) {
    lastDayOfWeek = dayOfWeek;
@@ -374,15 +382,15 @@ void loop()
   }
  }
 
- if (heartBeatCounter == 60) {
-  hbSend = 0;
-  heartBeatCounter = 0;
-  getNTPData();
-  sendToSite(0, 0);
- }
  delay(200);
  if (fromSource < 3) dispData();
  client.loop();
+}
+
+void DoHeartBeat(){
+ check_connection();
+ getNTPData();
+ sendToSite(0, 0);
 }
 
 void saveConfig() {
@@ -408,6 +416,29 @@ void printConfig() {
 
 void setSettings(bool doAsk) {
  int i = 0;
+ Serial.print(((reinterpret_cast<const __FlashStringHelper *>(("SSID (")))));
+ Serial.print(storage.ESP_SSID);
+ Serial.print(((reinterpret_cast<const __FlashStringHelper *>(("):")))));
+ if (doAsk == 1) {
+  getStringValue(15);
+  if (receivedString[0] != 0) {
+   storage.ESP_SSID[0] = 0;
+   strcat(storage.ESP_SSID, receivedString);
+  }
+ }
+ Serial.println();
+
+ Serial.print(((reinterpret_cast<const __FlashStringHelper *>(("Password (")))));
+ Serial.print(storage.ESP_PASS);
+ Serial.print(((reinterpret_cast<const __FlashStringHelper *>(("):")))));
+ if (doAsk == 1) {
+  getStringValue(26);
+  if (receivedString[0] != 0) {
+   storage.ESP_PASS[0] = 0;
+   strcat(storage.ESP_PASS, receivedString);
+  }
+ }
+ Serial.println();
 
  Serial.print(((reinterpret_cast<const __FlashStringHelper *>(("Call (")))));
  Serial.print(storage.MyCall);
@@ -706,14 +737,14 @@ void handleLighting(uint8_t int_src) {
  display.clear();
  if (0 == int_src)
  {
-  Serial.println(((reinterpret_cast<const __FlashStringHelper *>(("interrupt source result not expected")))));
+  Serial.println(((reinterpret_cast<const __FlashStringHelper *>(("Distance estimation has changed")))));
   display.clear();
   display.setCursor(0,0*8);
-  display.print(((reinterpret_cast<const __FlashStringHelper *>(("interrupt")))));
+  display.print(((reinterpret_cast<const __FlashStringHelper *>(("Distance")))));
   display.setCursor(0,1*8);
-  display.print(((reinterpret_cast<const __FlashStringHelper *>((" source result")))));
+  display.print(((reinterpret_cast<const __FlashStringHelper *>((" estimation")))));
   display.setCursor(0,2*8);
-  display.print(((reinterpret_cast<const __FlashStringHelper *>((" not expected")))));
+  display.print(((reinterpret_cast<const __FlashStringHelper *>((" has changed")))));
   //display.display();
  }
  else if (0x08 == int_src)
@@ -744,7 +775,6 @@ void handleLighting(uint8_t int_src) {
   lastData[0].dt = lightning_dist_km;
 
   sendToSite(1,lightning_dist_km);
-  heartBeatCounter = 0;
 
   for (int i = 0; i < 10; i++) {
    Serial.print(lastData[i].dw); Serial.print(((reinterpret_cast<const __FlashStringHelper *>((" ")))));
@@ -781,7 +811,11 @@ void handleLighting(uint8_t int_src) {
  }
  digitalWrite(4,0);
  ledTime = millis();
+ lightning.PrintAllRegs();
+ lightning.clearDistance(0x1F);
+ lightning.clearStatistics(true);
  delay(500);
+ lightning.PrintAllRegs();
 }
 
 void moveMinutes() {
@@ -948,13 +982,6 @@ void setup()
  digitalWrite(32,0);
  if (storage.beeperCnt>0) SingleBeep(2);
 
- for (int i=0;i<3;i++){
-  digitalWrite(4,0);
-  delay(100);
-  digitalWrite(4,1);
-  delay(100);
- }
-
  Serial.begin(115200);
  Serial.print(((reinterpret_cast<const __FlashStringHelper *>(("Playing With Fusion: AS3935 Lightning Sensor, SEN-39001-R01  v")))));
  Serial.print(majorVersion);
@@ -1050,20 +1077,14 @@ void setup()
  //client.onMessage(messageReceived);
  Serial.println(((reinterpret_cast<const __FlashStringHelper *>(("Start WiFi")))));
  display.println(((reinterpret_cast<const __FlashStringHelper *>(("Start WiFi")))));
- if (portal.begin()) {
-      Serial.println("WiFi connected: " + WiFi.localIP().toString());
-    } else {
-  Serial.println("Connection failed");
-  while (true) {
-   yield();
-  }
- }
+ check_connection();
  getNTPData();
  sendToSite(0, 0);
  display.clear();
  printInfo();
  ledTime = millis();
  esp_sleep_enable_ext1_wakeup(0x402000000,ESP_EXT1_WAKEUP_ANY_HIGH);
+ esp_sleep_enable_timer_wakeup(15 * 60 * 1000000);
 }
 
 bool check_AS3935() {
@@ -1092,29 +1113,28 @@ bool check_AS3935() {
  }
 
  byte noiseFloorLvl = lightning.readNoiseLevel();
- noiseFloorLvl = lightning.readNoiseLevel();
  Serial.print("Noise Level is set at: ");
  Serial.println(noiseFloorLvl);
 
  byte watchdogThreshold = lightning.readWatchdogThreshold();
- watchdogThreshold = lightning.readWatchdogThreshold();
  Serial.print("Watchdog Threshold is set to: ");
  Serial.println(watchdogThreshold);
 
  byte spikeRejection = lightning.readSpikeRejection();
- spikeRejection = lightning.readSpikeRejection();
  Serial.print("Spike Rejection is set to: ");
  Serial.println(spikeRejection);
 
  byte lightningThresh = lightning.readLightningThreshold();
- lightningThresh = lightning.readLightningThreshold();
  Serial.print("The number of strikes before interrupt is triggerd: ");
  Serial.println(lightningThresh);
 
  byte capacitance = lightning.readTuneCap();
- capacitance = lightning.readTuneCap();
  Serial.print("Internal Capacitor is set to: ");
  Serial.println(capacitance);
+
+ byte divRatio = lightning.readDivRatio();
+ Serial.print("Divider Ratio is set to: ");
+ Serial.println(divRatio);
 
  if (distMode==storage.AS3935_distMode)
   if (doorValue==storage.AS3935_doorMode)
@@ -1137,10 +1157,10 @@ void configure_timer() {
 }
 
 boolean check_connection() {
+ Serial.println("Check connection");
  updCounter = 0;
- portal.handleClient();
- if (WiFi.status() == WL_IDLE_STATUS) {
-  esp_restart();
+ if (WiFi.status() != WL_CONNECTED) {
+  InitWiFiConnection();
  }
 
  if (WiFi.status() == WL_CONNECTED){
@@ -1149,6 +1169,27 @@ boolean check_connection() {
   }
  }
  return (WiFi.status() == WL_CONNECTED) &&client.connected();
+}
+
+void InitWiFiConnection() {
+ WlanReset();
+ Serial.println(((reinterpret_cast<const __FlashStringHelper *>(("Reset WiFi")))));
+
+ while (((WiFi.status()) != WL_CONNECTED)){
+  Serial.print(".");
+  WlanReset();
+  WiFi.begin(storage.ESP_SSID,storage.ESP_PASS);
+  delay(2000);
+ }
+
+ WlanStatus();
+
+ if (WlanStatus()==WL_CONNECTED){
+  Serial.print("WiFi Connected to: ");
+  Serial.println(storage.ESP_SSID);
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+ }
 }
 
 void InitMQTTConnection() {
@@ -1234,79 +1275,90 @@ int WlanStatus() {
 }
 
 void sendToSite(byte whichInt, byte dist) {
- HTTPClient http; //Declare an object of class HTTPClient
- String getData = String("http://onweer.pi4raz.nl/AddEvent.php?Callsign=") +
- String(storage.MyCall) +
- String("&IntType=") +
- whichInt +
- String("&Distance=") +
- dist;
+ if (check_connection()) {
+  Serial.println("Send to site");
+  //HTTPClient http; //Declare an object of class HTTPClient
+  String getData = String("http://onweer.pi4raz.nl/AddEvent.php?Callsign=") +
+  String(storage.MyCall) +
+  String("&IntType=") +
+  whichInt +
+  String("&Distance=") +
+  dist;
 
- Serial.println(getData);
- http.begin(getData); //Specify request destination
- int httpCode = http.GET(); //Send the request
- if (httpCode > 0) { //Check the returning code
-  String payload = http.getString(); //Get the request response payload
-  Serial.println(payload); //Print the response payload
-  hbSend = 1;
+  Serial.println(getData);
+  http.begin(getData); //Specify request destination
+  int httpCode = http.GET(); //Send the request
+  if (httpCode > 0) { //Check the returning code
+   String payload = http.getString(); //Get the request response payload
+   Serial.println("----");
+   Serial.println(payload); //Print the response payload
+   Serial.println("----");
+   hbSend = 1;
+  }
+  http.end();
+
+  JsonObject& root = jsonBuffer.createObject();
+  root["command"] = "udevice";
+  root["idx"] = storage.domoticzDevice;
+  if (dist == 0){
+   root["nvalue"] = 1;
+   root["svalue"] = String("Heartbeat");
+  }
+  else{
+   root["nvalue"] = 3;
+   root["svalue"] = String("Onweer op ") + String(dist) + String(" KM");
+  }
+
+
+  root.printTo(Serial);
+
+  char jsonChar[100];
+  root.printTo((char*)jsonChar, root.measureLength() + 1);
+
+  client.publish("domoticz/in", (char*)jsonChar,0,1);
+  jsonBuffer.clear();
  }
-
- JsonObject& root = jsonBuffer.createObject();
- root["command"] = "udevice";
- root["idx"] = storage.domoticzDevice;
- if (dist == 0){
-  root["nvalue"] = 1;
-  root["svalue"] = String("Heartbeat");
- }
- else{
-  root["nvalue"] = 3;
-  root["svalue"] = String("Onweer op ") + String(dist) + String(" KM");
- }
-
-
- root.printTo(Serial);
-
- char jsonChar[100];
- root.printTo((char*)jsonChar, root.measureLength() + 1);
-
- client.publish("domoticz/in", (char*)jsonChar,0,1);
- jsonBuffer.clear();
 }
 
 void getNTPData() {
- HTTPClient http; //Declare an object of class HTTPClient
- http.begin("http://divs.rjdekok.nl/getTime.php"); //Specify request destination
- int httpCode = http.GET(); //Send the request
- if (httpCode > 0) { //Check the returning code
-  String payload = http.getString(); //Get the request response payload
-  Serial.println(payload); //Print the response payload
-  JsonObject& root = jsonBuffer.parseObject(payload);
-  if (root.success()){
-   String dow = root["Time"][0];
-   int year = root["Time"][1];
-   int month = root["Time"][2];
-   int day = root["Time"][3];
-   hour = root["Time"][4];
-   minute = root["Time"][5];
-   second = root["Time"][6];
+ if (check_connection()) {
+  Serial.println("Get time");
+  //HTTPClient http; //Declare an object of class HTTPClient
+  http.begin("http://divs.rjdekok.nl/getTime.php"); //Specify request destination
+  int httpCode = http.GET(); //Send the request
+  Serial.println(httpCode);
+  if (httpCode > 0) { //Check the returning code
+   String payload = http.getString(); //Get the request response payload
+   Serial.println(payload); //Print the response payload
+         JsonObject& root = jsonBuffer.parseObject(payload);
+   if (root.success()){
+    String dow = root["Time"][0];
+    int year = root["Time"][1];
+    int month = root["Time"][2];
+    int day = root["Time"][3];
+    hour = root["Time"][4];
+    minute = root["Time"][5];
+    second = root["Time"][6];
 
-   if (dow=="Sun") dayOfWeek = 1;
-   if (dow=="Mon") dayOfWeek = 2;
-   if (dow=="Tue") dayOfWeek = 3;
-   if (dow=="Wed") dayOfWeek = 4;
-   if (dow=="Thu") dayOfWeek = 5;
-   if (dow=="Fri") dayOfWeek = 6;
-   if (dow=="Sat") dayOfWeek = 7;
+    if (dow=="Sun") dayOfWeek = 1;
+    if (dow=="Mon") dayOfWeek = 2;
+    if (dow=="Tue") dayOfWeek = 3;
+    if (dow=="Wed") dayOfWeek = 4;
+    if (dow=="Thu") dayOfWeek = 5;
+    if (dow=="Fri") dayOfWeek = 6;
+    if (dow=="Sat") dayOfWeek = 7;
 
-   hour = hour + storage.timeCorrection;
-   if (hour > 23) {
-    hour = hour - 24;
-    dayOfWeek++;
-    if (dayOfWeek > 7) dayOfWeek = 1;
+    hour = hour + storage.timeCorrection;
+    if (hour > 23) {
+     hour = hour - 24;
+     dayOfWeek++;
+     if (dayOfWeek > 7) dayOfWeek = 1;
+    }
    }
+   jsonBuffer.clear();
   }
-  jsonBuffer.clear();
- }
+  http.end();
+    }
 }
 
 void printMinutes() {

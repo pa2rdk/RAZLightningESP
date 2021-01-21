@@ -36,41 +36,6 @@
   },
   {
     "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
-    "Include": "AutoConnect.h",
-    "Includepath": "/home/robert/Dropbox/Arduino-workspace/libraries/AutoConnect/src"
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
-    "Include": "DNSServer.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/DNSServer/src"
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
-    "Include": "WebServer.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WebServer/src"
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
-    "Include": "PageBuilder.h",
-    "Includepath": "/home/robert/Dropbox/Arduino-workspace/libraries/PageBuilder/src"
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
-    "Include": "Preferences.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/Preferences/src"
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
-    "Include": "ArduinoJson.h",
-    "Includepath": "/home/robert/Dropbox/Arduino-workspace/libraries/ArduinoJson/src"
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
-    "Include": "Ticker.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/Ticker/src"
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
     "Include": "HTTPClient.h",
     "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/HTTPClient/src"
   },
@@ -81,13 +46,8 @@
   },
   {
     "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
-    "Include": "HTTPUpdate.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/HTTPUpdate/src"
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
-    "Include": "Update.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/Update/src"
+    "Include": "ArduinoJson.h",
+    "Includepath": "/home/robert/Dropbox/Arduino-workspace/libraries/ArduinoJson/src"
   },
   {
     "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/build/sketch/RAZLightningESP.ino.cpp",
@@ -180,91 +140,6 @@
     "Includepath": null
   },
   {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnect.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectAux.cpp",
-    "Include": "SPIFFS.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/SPIFFS/src"
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectAux.cpp",
-    "Include": "FS.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/FS/src"
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectAux.cpp",
-    "Include": "SD.h",
-    "Includepath": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/SD/src"
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectAux.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectCredential.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectPage.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectTicker.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/AutoConnect/src/AutoConnectUpdate.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/DNSServer/src/DNSServer.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WebServer/src/Parsing.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WebServer/src/WebServer.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WebServer/src/detail/mimetable.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/PageBuilder/src/PageBuilder.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/PageBuilder/src/PageStream.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/Preferences/src/Preferences.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/Ticker/src/Ticker.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
     "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/HTTPClient/src/HTTPClient.cpp",
     "Include": "",
     "Includepath": null
@@ -276,16 +151,6 @@
   },
   {
     "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/WiFiClientSecure/src/ssl_client.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/HTTPUpdate/src/HTTPUpdate.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/Update/src/Updater.cpp",
     "Include": "",
     "Includepath": null
   },
@@ -326,36 +191,6 @@
   },
   {
     "Sourcefile": "/home/robert/Dropbox/Arduino-workspace/libraries/Adafruit-ST7735-Library-master/Adafruit_ST7735.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/SPIFFS/src/SPIFFS.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/FS/src/FS.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/FS/src/vfs_api.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/SD/src/SD.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/SD/src/sd_diskio.cpp",
-    "Include": "",
-    "Includepath": null
-  },
-  {
-    "Sourcefile": "/home/robert/.arduino15/packages/esp32/hardware/esp32/1.0.3/libraries/SD/src/sd_diskio_crc.c",
     "Include": "",
     "Includepath": null
   }
