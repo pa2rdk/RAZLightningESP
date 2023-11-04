@@ -1,17 +1,17 @@
-# 1 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+# 1 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
 //RAZLightning.ino v3.0 01/07/2020
 //Placed on GITHUB Aug. 1 2018
 //By R.J. de Kok - (c) 2019
 
-# 6 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 7 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 8 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 9 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 10 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 11 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 12 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 13 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
-# 14 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 6 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 7 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 8 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 9 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 10 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 11 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 12 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 13 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
+# 14 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 2
 
 #define CE 15
 #define DC 2
@@ -84,8 +84,8 @@ struct StoreStruct {
 
 StoreStruct storage = {
   '%',
-  "Ziggo181AF5A",
-  "Ikwileenluiaard1",
+  "MARODEKWiFi",
+  "MAROWiFi19052004!",
   "PA2RDK",
   "mqtt.rjdekok.nl",
   "Robert",
@@ -158,9 +158,9 @@ WiFiClient net;
 MQTTClient client;
 HTTPClient http;
 hw_timer_t *timeTimer = 
-# 159 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 3 4
+# 159 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino" 3 4
                        __null
-# 159 "/home/robert/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
+# 159 "/Users/robertdekok/Dropbox/Arduino-workspace/RAZLightningESP/RAZLightningESP.ino"
                            ;
 
 const unsigned char lightning_bmp[32] = {
@@ -699,7 +699,7 @@ void handleMenu() {
  if (storage.dispScreen > 7) storage.dispScreen = 0;
 }
 
-void __attribute__((section(".iram1"))) updateTime() {
+void __attribute__((section(".iram1" "." "16"))) updateTime() {
  second++;
  updCounter++;
  if (updCounter==60) esp_restart();
@@ -1175,12 +1175,12 @@ void InitWiFiConnection() {
  WlanReset();
  Serial.println(((reinterpret_cast<const __FlashStringHelper *>(("Reset WiFi")))));
 
- while (((WiFi.status()) != WL_CONNECTED)){
-  Serial.print(".");
-  WlanReset();
-  WiFi.begin(storage.ESP_SSID,storage.ESP_PASS);
-  delay(2000);
- }
+    WiFi.begin(storage.ESP_SSID,storage.ESP_PASS);
+    while (((WiFi.status()) != WL_CONNECTED)){
+        Serial.print(".");
+        //WlanReset();
+        delay(1000);
+    }
 
  WlanStatus();
 
@@ -1303,10 +1303,12 @@ void sendToSite(byte whichInt, byte dist) {
   if (dist == 0){
    root["nvalue"] = 1;
    root["svalue"] = String("Heartbeat");
+   client.publish("rdkonweer/heartbeat", "1");
   }
   else{
    root["nvalue"] = 3;
    root["svalue"] = String("Onweer op ") + String(dist) + String(" KM");
+   client.publish("rdkonweer/onweer", String(dist) + String(" KM"));
   }
 
 
@@ -1315,7 +1317,7 @@ void sendToSite(byte whichInt, byte dist) {
   char jsonChar[100];
   root.printTo((char*)jsonChar, root.measureLength() + 1);
 
-  client.publish("domoticz/in", (char*)jsonChar,0,1);
+  //client.publish("rdkonweer/", (char*)jsonChar,0,1);
   jsonBuffer.clear();
  }
 }
@@ -1324,7 +1326,7 @@ void getNTPData() {
  if (check_connection()) {
   Serial.println("Get time");
   //HTTPClient http; //Declare an object of class HTTPClient
-  http.begin("http://divs.rjdekok.nl/getTime.php"); //Specify request destination
+  http.begin("http://onweer.pi4raz.nl/getTime.php"); //Specify request destination
   int httpCode = http.GET(); //Send the request
   Serial.println(httpCode);
   if (httpCode > 0) { //Check the returning code

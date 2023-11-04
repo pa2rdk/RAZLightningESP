@@ -83,8 +83,8 @@ struct StoreStruct {
 
 StoreStruct storage = {
 		'%',
-		"Ziggo181AF5A",
-		"Ikwileenluiaard1",
+		"MARODEKWiFi",
+		"MAROWiFi19052004!",
 		"PA2RDK",
 		"mqtt.rjdekok.nl",
 		"Robert",
@@ -1170,12 +1170,12 @@ void InitWiFiConnection() {
 	WlanReset();
 	Serial.println(F("Reset WiFi"));
 
-	while (((WiFi.status()) != WL_CONNECTED)){
-		Serial.print(".");
-		WlanReset();
-		WiFi.begin(storage.ESP_SSID,storage.ESP_PASS);
-		delay(2000);
-	}
+    WiFi.begin(storage.ESP_SSID,storage.ESP_PASS);
+    while (((WiFi.status()) != WL_CONNECTED)){
+        Serial.print(".");
+        //WlanReset();
+        delay(1000);
+    }
 
 	WlanStatus();
 
@@ -1298,10 +1298,12 @@ void sendToSite(byte whichInt, byte dist) {
 		if (dist == 0){
 			root["nvalue"] = 1;
 			root["svalue"] = String("Heartbeat");
+			client.publish("rdkonweer/heartbeat", "1");
 		}
 		else{
 			root["nvalue"] = 3;
 			root["svalue"] = String("Onweer op ") + String(dist) + String(" KM");
+			client.publish("rdkonweer/onweer", String(dist) + String(" KM"));
 		}
 		
 
@@ -1310,7 +1312,7 @@ void sendToSite(byte whichInt, byte dist) {
 		char jsonChar[100];
 		root.printTo((char*)jsonChar, root.measureLength() + 1);
 
-		client.publish("domoticz/in", (char*)jsonChar,0,1);
+		//client.publish("rdkonweer/", (char*)jsonChar,0,1);
 		jsonBuffer.clear();
 	}
 }
@@ -1319,7 +1321,7 @@ void getNTPData() {
 	if (check_connection()) {
 		Serial.println("Get time");
 		//HTTPClient http; //Declare an object of class HTTPClient
-		http.begin("http://divs.rjdekok.nl/getTime.php"); //Specify request destination
+		http.begin("http://onweer.pi4raz.nl/getTime.php"); //Specify request destination
 		int httpCode = http.GET(); //Send the request
 		Serial.println(httpCode);
 		if (httpCode > 0) { //Check the returning code
