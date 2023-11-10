@@ -1,11 +1,12 @@
 StoreStruct storage = {
-		'@',                  // chkDigit;
-		"MARODEKWiFi",        // ESP_SSID[16];
-		"MAROWiFi19052004!",  // ESP_PASS[27];
-		"PA2RDK",             // MyCall[10];
-		"mqtt.rjdekok.nl",    // mqtt_broker[50];
-		"Robert",             // mqtt_user[25];
-		"Mosq5495!",          // mqtt_pass[25];
+		'#',                  // chkDigit;
+		"yourSSID",           // ESP_SSID[16];
+		"yourWiFiPass",       // ESP_PASS[27];
+		"Pi4RAZ",             // MyCall[10];
+		"mqtt.server.nl",     // mqtt_broker[50];
+		"MQTTUserName",       // mqtt_user[25];
+		"MqttPassword",       // mqtt_pass[25];
+    "Lightningdetector",  // mqtt_subject[25];
 		1883,                 // mqtt_port;
 		1,                    // AS3935_doorMode, 0 = indoor
 		1,                    // AS3935_distMode, 1 = enabled

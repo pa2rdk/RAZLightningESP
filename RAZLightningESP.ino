@@ -8,6 +8,7 @@
 //#include "AS3935.h"
 #include "EEPROM.h"
 #include "WiFi.h"
+#include <WifiMulti.h>
 #include "Wire.h"
 #include <HTTPClient.h>
 #include <MQTT.h>
@@ -53,17 +54,18 @@
 
 
 #define offsetEEPROM  0x10
-#define EEPROM_SIZE   200
+#define EEPROM_SIZE   250
 #define TIMEZONE euCET
 
 struct StoreStruct {
   byte chkDigit;
-  char ESP_SSID[16];
+  char ESP_SSID[25];
   char ESP_PASS[27];
   char MyCall[10];
   char mqtt_broker[50];
   char mqtt_user[25];
   char mqtt_pass[25];
+  char mqtt_subject[25]; 
   int mqtt_port;
   byte AS3935_doorMode;
   byte AS3935_distMode;
@@ -82,8 +84,8 @@ typedef struct {  // WiFi Access
   const char *PASSWORD;
 } wlanSSID;
 
-//#include "RDK_Settings.h";
-#include "All_Settings.h";
+#include "RDK_Settings.h";
+// #include "All_Settings.h";
 
 char receivedString[128];
 char chkGS[3] = "GS";
@@ -122,6 +124,7 @@ byte startPos = 0;
 byte height;
 byte btnPressed = 0;
 
+WiFiMulti wifiMulti;
 SparkFun_AS3935 lightning(AS3935_ADDR);
 TFT_eSPI tft = TFT_eSPI();  // Invoke custom library
 WiFiClient net;
@@ -460,6 +463,18 @@ void setSettings(bool doAsk) {
   }
   Serial.println();
 
+  Serial.print(F("MQTT Subject ("));
+  Serial.print(storage.mqtt_subject);
+  Serial.print(F("):"));
+  if (doAsk == 1) {
+    getStringValue(24);
+    if (receivedString[0] != 0) {
+      storage.mqtt_subject[0] = 0;
+      strcat(storage.mqtt_subject, receivedString);
+    }
+  }
+  Serial.println();
+
   Serial.print(F("Indoors=0 or Outdoors=1 ("));
   if (storage.AS3935_doorMode == 0) {
     Serial.print(F("Indoors"));
@@ -709,6 +724,10 @@ void handleLighting(uint8_t int_src) {
     if (storage.beeperCnt > 0 && minutes[0] >= storage.beeperCnt && minuteBeeped == 0) {
       SingleBeep(5);
       minuteBeeped++;
+      char buff[20];
+      sprintf(buff, "%2d/%2d/%2d %2d:%2d:%2d", day(boot_time), month(boot_time), year(boot_time), hour(boot_time), minute(boot_time), second(boot_time));
+      client.publish(String(storage.mqtt_subject) + "/lightning/datetime", buff);
+      client.publish(String(storage.mqtt_subject) + "/lightning/distance", (String)lightning_dist_km + "KM");
     }
   } else if (int_src == DISTURBER_INT) {
     tft.fillScreen(TFT_BLACK);
@@ -900,15 +919,24 @@ void setup() {
   Serial.println();
   Serial.println(F("Array cleared...."));
   tft.println(F("Start MQTT"));
-  Serial.println(F("Start MQTT"));
   client.begin(storage.mqtt_broker, storage.mqtt_port, net);
+  Serial.println(F("Started MQTT"));
 
   Serial.println(F("Start WiFi"));
   tft.println(F("Start WiFi"));
+
+  int maxNetworks = (sizeof(wifiNetworks) / sizeof(wlanSSID));
+  for (int i = 0; i < maxNetworks; i++ )
+    wifiMulti.addAP(wifiNetworks[i].SSID, wifiNetworks[i].PASSWORD);
+  wifiMulti.addAP(storage.ESP_SSID,storage.ESP_PASS);
+
   if (check_connection()){
     getNTPData();
     boot_time = local_time;
     sendToSite(0, 0);
+    char buff[20];
+    sprintf(buff, "%2d/%2d/%2d %2d:%2d:%2d", day(boot_time), month(boot_time), year(boot_time), hour(boot_time), minute(boot_time), second(boot_time));
+    client.publish(String(storage.mqtt_subject) + "/started", buff);
   }
   tft.fillScreen(TFT_BLACK);
   printInfo();
@@ -996,17 +1024,29 @@ boolean check_connection() {
 }
 
 void InitWiFiConnection() {
-  Serial.println(F("Connecting to WiFi..."));
-  WiFi.begin(storage.ESP_SSID, storage.ESP_PASS);
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print(".");
-    delay(100);
-  }
+  // Serial.println(F("Connecting to WiFi..."));
+  // WiFi.begin(storage.ESP_SSID, storage.ESP_PASS);
+  // while (WiFi.status() != WL_CONNECTED) {
+  //   Serial.print(".");
+  //   delay(100);
+  // }
 
-  if (WiFi.status() == WL_CONNECTED) {
-    Serial.print("WiFi Connected to: ");
-    Serial.println(storage.ESP_SSID);
-    Serial.print("IP address: ");
+  // if (WiFi.status() == WL_CONNECTED) {
+  //   Serial.print("WiFi Connected to: ");
+  //   Serial.println(storage.ESP_SSID);
+  //   Serial.print("IP address: ");
+  //   Serial.println(WiFi.localIP());
+  // }
+
+  long startTime = millis();
+  while (wifiMulti.run() != WL_CONNECTED && millis()-startTime<30000){
+    delay(1000);
+    Serial.print(".");
+  }
+  if (WiFi.status() == WL_CONNECTED){
+    Serial.print("Connected to: ");
+    Serial.println(WiFi.SSID());
+    Serial.print("Local IP: ");
     Serial.println(WiFi.localIP());
   }
 }
