@@ -725,7 +725,7 @@ void handleLighting(uint8_t int_src) {
       SingleBeep(5);
       minuteBeeped++;
       char buff[20];
-      sprintf(buff, "%2d/%2d/%2d %2d:%2d:%2d", day(boot_time), month(boot_time), year(boot_time), hour(boot_time), minute(boot_time), second(boot_time));
+      sprintf(buff, "%2d/%2d/%2d %2d:%2d:%2d", day(local_time), month(local_time), year(local_time), hour(local_time), minute(local_time), second(local_time));
       client.publish(String(storage.mqtt_subject) + "/lightning/datetime", buff);
       client.publish(String(storage.mqtt_subject) + "/lightning/distance", (String)lightning_dist_km + "KM");
     }
@@ -1024,20 +1024,6 @@ boolean check_connection() {
 }
 
 void InitWiFiConnection() {
-  // Serial.println(F("Connecting to WiFi..."));
-  // WiFi.begin(storage.ESP_SSID, storage.ESP_PASS);
-  // while (WiFi.status() != WL_CONNECTED) {
-  //   Serial.print(".");
-  //   delay(100);
-  // }
-
-  // if (WiFi.status() == WL_CONNECTED) {
-  //   Serial.print("WiFi Connected to: ");
-  //   Serial.println(storage.ESP_SSID);
-  //   Serial.print("IP address: ");
-  //   Serial.println(WiFi.localIP());
-  // }
-
   long startTime = millis();
   while (wifiMulti.run() != WL_CONNECTED && millis()-startTime<30000){
     delay(1000);
