@@ -1,5 +1,5 @@
 StoreStruct storage = {
-		'#',                  // chkDigit;
+		'@',                  // chkDigit;
 		"yourSSID",           // ESP_SSID[16];
 		"yourWiFiPass",       // ESP_PASS[27];
 		"Pi4RAZ",             // MyCall[10];
@@ -8,6 +8,7 @@ StoreStruct storage = {
 		"MqttPassword",       // mqtt_pass[25];
     "Lightningdetector",  // mqtt_subject[25];
 		1883,                 // mqtt_port;
+    1,                    // use_MQTT;
 		1,                    // AS3935_doorMode, 0 = indoor
 		1,                    // AS3935_distMode, 1 = enabled
 		96,                   // AS3935_capacitance;

@@ -1,5 +1,6 @@
 // *************************************************************************************
-//  V4.0. Ombouw naar standaard tft print
+//  V4.1  Inbouw MQTT switch & Strikes teller Frank
+//  V4.0  Ombouw naar standaard tft print
 //  Placed on GITHUB Aug. 1 2018
 //  By R.J. de Kok - (c) 2018 - 2023
 // *************************************************************************************
@@ -67,6 +68,7 @@ struct StoreStruct {
   char mqtt_pass[25];
   char mqtt_subject[25]; 
   int mqtt_port;
+  bool use_MQTT;
   byte AS3935_doorMode;
   byte AS3935_distMode;
   byte AS3935_capacitance;
@@ -93,8 +95,12 @@ char chkGS[3] = "GS";
 byte minutes[60];
 byte hours[24];
 byte days[30];
+unsigned long strikeTimes[11];
 byte examples[ExampleCounter];
 
+unsigned long strikeTime;
+unsigned long strikeDiff;
+unsigned int strikePointer=0;
 uint16_t pulses = 0;
 uint16_t distPulses = 0;
 byte minuteBeeped = 0;
@@ -254,7 +260,7 @@ void printGraph(byte graphArray[], int lenArray, int scale, uint32_t lColor, Str
   for (int i=0;i<lenArray;i++){
     int x = 290-(i*hScale);
     int y = 220-(graphArray[i]*vScale);
-    Serial.printf("Pixel %d with value  %d on %d,%d (max = %d)\r\n",i, graphArray[i], x, y, vMax);
+    //Serial.printf("Pixel %d with value  %d on %d,%d (max = %d)\r\n",i, graphArray[i], x, y, vMax);
     if (i==0) tft.drawPixel(x,y,TFT_RED);
     else tft.drawLine(lastX,lastY,x,y,TFT_RED);
     lastX = x;
@@ -355,7 +361,9 @@ void loop() {
   }
 
   if (fromSource < FROMNOTHING) dispData();
-  client.loop();
+  if (storage.use_MQTT){
+    client.loop();
+  }
 }
 
 void saveConfig() {
@@ -417,63 +425,73 @@ void setSettings(bool doAsk) {
   }
   Serial.println();
 
-  Serial.print(F("MQTT Broker ("));
-  Serial.print(storage.mqtt_broker);
-  Serial.print(F("):"));
-  if (doAsk == 1) {
-    getStringValue(49);
-    if (receivedString[0] != 0) {
-      storage.mqtt_broker[0] = 0;
-      strcat(storage.mqtt_broker, receivedString);
-    }
-  }
-  Serial.println();
-
-  Serial.print(F("MQTT Port ("));
-  Serial.print(storage.mqtt_port);
+  Serial.print(F("Use MQTT (0 -1) ("));
+  Serial.print(storage.use_MQTT);
   Serial.print(F("):"));
   if (doAsk == 1) {
     i = getNumericValue();
-    if (receivedString[0] != 0) storage.mqtt_port = i;
+    if (receivedString[0] != 0) storage.use_MQTT = i;
   }
-
   Serial.println();
 
-  Serial.print(F("MQTT User ("));
-  Serial.print(storage.mqtt_user);
-  Serial.print(F("):"));
-  if (doAsk == 1) {
-    getStringValue(24);
-    if (receivedString[0] != 0) {
-      storage.mqtt_user[0] = 0;
-      strcat(storage.mqtt_user, receivedString);
+  if (storage.use_MQTT){
+    Serial.print(F("MQTT Broker ("));
+    Serial.print(storage.mqtt_broker);
+    Serial.print(F("):"));
+    if (doAsk == 1) {
+      getStringValue(49);
+      if (receivedString[0] != 0) {
+        storage.mqtt_broker[0] = 0;
+        strcat(storage.mqtt_broker, receivedString);
+      }
     }
-  }
-  Serial.println();
+    Serial.println();
 
-  Serial.print(F("MQTT Password ("));
-  Serial.print(storage.mqtt_pass);
-  Serial.print(F("):"));
-  if (doAsk == 1) {
-    getStringValue(24);
-    if (receivedString[0] != 0) {
-      storage.mqtt_pass[0] = 0;
-      strcat(storage.mqtt_pass, receivedString);
+    Serial.print(F("MQTT Port ("));
+    Serial.print(storage.mqtt_port);
+    Serial.print(F("):"));
+    if (doAsk == 1) {
+      i = getNumericValue();
+      if (receivedString[0] != 0) storage.mqtt_port = i;
     }
-  }
-  Serial.println();
+    Serial.println();
 
-  Serial.print(F("MQTT Subject ("));
-  Serial.print(storage.mqtt_subject);
-  Serial.print(F("):"));
-  if (doAsk == 1) {
-    getStringValue(24);
-    if (receivedString[0] != 0) {
-      storage.mqtt_subject[0] = 0;
-      strcat(storage.mqtt_subject, receivedString);
+    Serial.print(F("MQTT User ("));
+    Serial.print(storage.mqtt_user);
+    Serial.print(F("):"));
+    if (doAsk == 1) {
+      getStringValue(24);
+      if (receivedString[0] != 0) {
+        storage.mqtt_user[0] = 0;
+        strcat(storage.mqtt_user, receivedString);
+      }
     }
+    Serial.println();
+
+    Serial.print(F("MQTT Password ("));
+    Serial.print(storage.mqtt_pass);
+    Serial.print(F("):"));
+    if (doAsk == 1) {
+      getStringValue(24);
+      if (receivedString[0] != 0) {
+        storage.mqtt_pass[0] = 0;
+        strcat(storage.mqtt_pass, receivedString);
+      }
+    }
+    Serial.println();
+
+    Serial.print(F("MQTT Subject ("));
+    Serial.print(storage.mqtt_subject);
+    Serial.print(F("):"));
+    if (doAsk == 1) {
+      getStringValue(24);
+      if (receivedString[0] != 0) {
+        storage.mqtt_subject[0] = 0;
+        strcat(storage.mqtt_subject, receivedString);
+      }
+    }
+    Serial.println();
   }
-  Serial.println();
 
   Serial.print(F("Indoors=0 or Outdoors=1 ("));
   if (storage.AS3935_doorMode == 0) {
@@ -726,8 +744,36 @@ void handleLighting(uint8_t int_src) {
       minuteBeeped++;
       char buff[20];
       sprintf(buff, "%2d/%2d/%2d %2d:%2d:%2d", day(local_time), month(local_time), year(local_time), hour(local_time), minute(local_time), second(local_time));
-      client.publish(String(storage.mqtt_subject) + "/lightning/datetime", buff);
-      client.publish(String(storage.mqtt_subject) + "/lightning/distance", (String)lightning_dist_km + "KM");
+      if (storage.use_MQTT){
+        client.publish(String(storage.mqtt_subject) + "/lightning/datetime", buff);
+        client.publish(String(storage.mqtt_subject) + "/lightning/distance", (String)lightning_dist_km + "KM");
+      }
+    }
+
+    if (storage.use_MQTT){ //Frank z'n 10 strikes per second warning
+      if (check_connection()){
+        strikeTime = millis();
+        if (strikeTime < strikeTimes[0]) strikePointer = 0; // more than 50 days up
+        if (strikePointer < 9) {
+          strikeTimes[strikePointer++] = strikeTime;
+        }
+        if (strikePointer == 9){
+          moveTable();
+        }
+        strikeTimes[strikePointer] = strikeTime;
+        char strdist[10];
+        sprintf(strdist, "%u", lightning_dist_km);
+        client.publish(String(storage.mqtt_subject) + "strike_distance",strdist);
+        Serial.print(F("Strike distance to MQTT: "));
+        Serial.println(strdist);
+        strikeDiff = (strikeTimes[9] - strikeTimes[0])/1000;
+        if ( strikeDiff < 1800) {
+          sprintf(strdist, "%u", strikeDiff);
+          client.publish(String(storage.mqtt_subject) + "10_strikes_per_sec",strdist);
+          Serial.print(F("10 strikes per: "));
+          Serial.println(strdist);
+        }
+      }
     }
   } else if (int_src == DISTURBER_INT) {
     tft.fillScreen(TFT_BLACK);
@@ -772,6 +818,12 @@ void moveDays() {
     days[29 - i] = days[28 - i];
   }
   days[0] = 0;
+}
+
+void moveTable() {
+  for (strikePointer = 0; strikePointer < 9; strikePointer++) {
+    strikeTimes[strikePointer] = strikeTimes[strikePointer+1];
+  }
 }
 
 void showTime() {
@@ -918,9 +970,12 @@ void setup() {
   for (int i = 0; i < 60 ; i++) {minutes[i] = 0;}
   Serial.println();
   Serial.println(F("Array cleared...."));
-  tft.println(F("Start MQTT"));
-  client.begin(storage.mqtt_broker, storage.mqtt_port, net);
-  Serial.println(F("Started MQTT"));
+
+  if (storage.use_MQTT){
+    tft.println(F("Start MQTT"));
+    client.begin(storage.mqtt_broker, storage.mqtt_port, net);
+    Serial.println(F("Started MQTT"));
+  }
 
   Serial.println(F("Start WiFi"));
   tft.println(F("Start WiFi"));
@@ -936,7 +991,10 @@ void setup() {
     sendToSite(0, 0);
     char buff[20];
     sprintf(buff, "%2d/%2d/%2d %2d:%2d:%2d", day(boot_time), month(boot_time), year(boot_time), hour(boot_time), minute(boot_time), second(boot_time));
-    client.publish(String(storage.mqtt_subject) + "/started", buff);
+    
+    if (storage.use_MQTT){
+      client.publish(String(storage.mqtt_subject) + "/started", buff);
+    }
   }
   tft.fillScreen(TFT_BLACK);
   printInfo();
@@ -1015,12 +1073,17 @@ boolean check_connection() {
     InitWiFiConnection();
   }
 
-  if (WiFi.status() == WL_CONNECTED) {
-    if (!client.connected()) {
-      InitMQTTConnection();
+  bool mqttConnected = true;
+  if (storage.use_MQTT){
+    if (WiFi.status() == WL_CONNECTED) {
+      if (!client.connected()) {
+        InitMQTTConnection();
+      }
     }
+    mqttConnected = client.connected();
   }
-  return (WiFi.status() == WL_CONNECTED) && client.connected();
+
+  return (WiFi.status() == WL_CONNECTED) && mqttConnected;
 }
 
 void InitWiFiConnection() {
