@@ -944,6 +944,7 @@ void setup() {
   tft.println(F("Set detector params"));
   bool setAS3935 = check_AS3935(1);
   while (!setAS3935) {
+    delay(1000);
     lightning.maskDisturber(storage.AS3935_distMode);
     lightning.setIndoorOutdoor(storage.AS3935_doorMode == INDOOR?INDOOR:OUTDOOR);
     lightning.setNoiseLevel(storage.AS3935_noiseFloorLvl);
