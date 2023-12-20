@@ -180,7 +180,7 @@ void printInfo() {
   tft.print(storage.MyCall);
   tft.setCursor(0, (7 * lineHeight)+15);
   tft.print(F("Mode:"));
-  if (storage.AS3935_doorMode == 0) tft.print(F("Indoor"));
+  if (storage.AS3935_doorMode == INDOOR) tft.print(F("Indoor"));
   else tft.print(F("Outdoor"));
   tft.setCursor(0, (8 * lineHeight)+15);
   tft.print(F("Dist:"));
@@ -494,7 +494,7 @@ void setSettings(bool doAsk) {
   }
 
   Serial.print(F("Indoors=0 or Outdoors=1 ("));
-  if (storage.AS3935_doorMode == 0) {
+  if (storage.AS3935_doorMode == INDOOR) {
     Serial.print(F("Indoors"));
   } else {
     Serial.print(F("Outdoors"));
@@ -502,7 +502,7 @@ void setSettings(bool doAsk) {
   Serial.print(F("): "));
   if (doAsk == 1) {
     i = getNumericValue();
-    if (receivedString[0] != 0) storage.AS3935_doorMode = i;
+    if (receivedString[0] != 0) storage.AS3935_doorMode = i==1?OUTDOOR:INDOOR;
   }
   Serial.println();
 
@@ -519,7 +519,7 @@ void setSettings(bool doAsk) {
   }
   Serial.println();
 
-  Serial.print(F("Capacity ("));
+  Serial.print(F("Capacity (8, 16, 24, 32...120)("));
   Serial.print(storage.AS3935_capacitance);
   Serial.print(F("):"));
   if (doAsk == 1) {
@@ -528,7 +528,7 @@ void setSettings(bool doAsk) {
   }
   Serial.println();
 
-  Serial.print(F("Division ratio ("));
+  Serial.print(F("Division ratio (32, 64, or 128)("));
   Serial.print(storage.AS3935_divisionRatio);
   Serial.print(F("):"));
   if (doAsk == 1) {
@@ -937,15 +937,18 @@ void setup() {
     esp_restart();
   }
 
+  lightning.calibrateOsc();
   tft.println(F("Set detector params"));
   bool setAS3935 = check_AS3935(1);
   while (!setAS3935) {
+    lightning.resetSettings();
     tft.print(F("."));
     delay(1000);
-    lightning.resetSettings();
+    lightning.calibrateOsc();
+
     lightning.maskDisturber(storage.AS3935_distMode);
-    if (storage.AS3935_doorMode == 0) lightning.setIndoorOutdoor(INDOOR);
-    else lightning.setIndoorOutdoor(OUTDOOR);
+    lightning.setIndoorOutdoor(storage.AS3935_doorMode == INDOOR?INDOOR:OUTDOOR);
+    lightning.setIndoorOutdoor(OUTDOOR);
     lightning.setNoiseLevel(storage.AS3935_noiseFloorLvl);
     lightning.watchdogThreshold(storage.AS3935_watchdogThreshold);
     lightning.spikeRejection(storage.AS3935_spikeRejection);
@@ -1003,59 +1006,36 @@ void setup() {
 
 bool check_AS3935(bool doCheck) {
   bool result = false;
-  byte distMode = lightning.readMaskDisturber();
-  Serial.print("Are disturbers being masked: ");
-  if (distMode == 1)
-    Serial.println("YES");
-  else if (distMode == 0)
-    Serial.println("NO");
 
-  byte doorMode = lightning.readIndoorOutdoor();
-  byte doorValue;
-  Serial.print("Are we set for indoor or outdoor: ");
-  if (doorMode == INDOOR) {
-    Serial.println("Indoor.");
-    doorValue = 0;
-  } else if (doorMode == OUTDOOR) {
-    Serial.println("Outdoor.");
-    doorValue = 1;
-  } else {
-    Serial.println(doorMode, BIN);
-    doorValue = -1;
-  }
+  Serial.printf("Disturbers being masked:%s\r\n",lightning.readMaskDisturber()?"YES":"NO");
+  Serial.printf("Are we set for indoor or outdoor:%s.\r\n",lightning.readIndoorOutdoor()==INDOOR?"Indoor":lightning.readIndoorOutdoor()==OUTDOOR?"Outdoor":"Undefined");
+  Serial.printf("Internal Capacitor is set to:%d\r\n",lightning.readTuneCap());
+  Serial.printf("Noise Level is set at:%d\r\n",lightning.readNoiseLevel());
+  Serial.printf("Watchdog Threshold is set to:%d\r\n",lightning.readWatchdogThreshold());
+  Serial.printf("Spike Rejection is set to:%d\r\n",lightning.readSpikeRejection());
+  Serial.printf("The number of strikes before interrupt is triggered:%d\r\n",lightning.readLightningThreshold());
+  Serial.printf("Divider Ratio is set to:%d\r\n",lightning.readDivRatio());
 
-  byte noiseFloorLvl = lightning.readNoiseLevel();
-  Serial.print("Noise Level is set at: ");
-  Serial.println(noiseFloorLvl);
+  Serial.printf("distMode %d,%d\r\n",lightning.readMaskDisturber(), storage.AS3935_distMode);
+  Serial.printf("In/Outdoor %d,%d\r\n",lightning.readIndoorOutdoor(), storage.AS3935_doorMode);
+  Serial.printf("capacitance %d,%d\r\n",lightning.readTuneCap(), storage.AS3935_capacitance);
+  Serial.printf("noiseFloorLvl %d,%d\r\n",lightning.readNoiseLevel(), storage.AS3935_noiseFloorLvl);
+  Serial.printf("watchdogThreshold %d,%d\r\n",lightning.readWatchdogThreshold(), storage.AS3935_watchdogThreshold);
+  Serial.printf("spikeRejection %d,%d\r\n",lightning.readSpikeRejection(), storage.AS3935_spikeRejection); 
+  Serial.printf("lightningThresh %d,%d\r\n",lightning.readLightningThreshold(), storage.AS3935_lightningThresh);
+  Serial.printf("Divider Ratio %d,%d\r\n",lightning.readDivRatio(), storage.AS3935_divisionRatio);
 
-  byte watchdogThreshold = lightning.readWatchdogThreshold();
-  Serial.print("Watchdog Threshold is set to: ");
-  Serial.println(watchdogThreshold);
-
-  byte spikeRejection = lightning.readSpikeRejection();
-  Serial.print("Spike Rejection is set to: ");
-  Serial.println(spikeRejection);
-
-  byte lightningThresh = lightning.readLightningThreshold();
-  Serial.print("The number of strikes before interrupt is triggered: ");
-  Serial.println(lightningThresh);
-
-  byte capacitance = lightning.readTuneCap();
-  Serial.print("Internal Capacitor is set to: ");
-  Serial.println(capacitance);
-
-  byte divRatio = lightning.readDivRatio();
-  Serial.print("Divider Ratio is set to: ");
-  Serial.println(divRatio);
   if (doCheck)
-    if (distMode == storage.AS3935_distMode)
-      if (doorValue == storage.AS3935_doorMode)
-        if (capacitance == storage.AS3935_capacitance)
-          if (noiseFloorLvl == storage.AS3935_noiseFloorLvl)
-            if (watchdogThreshold == storage.AS3935_watchdogThreshold)
-              if (spikeRejection == storage.AS3935_spikeRejection)
-                if (lightningThresh == storage.AS3935_lightningThresh)
-                  result = true;
+    if (lightning.readMaskDisturber() == storage.AS3935_distMode)
+      if (lightning.readIndoorOutdoor() == storage.AS3935_doorMode)
+        if (lightning.readTuneCap() == storage.AS3935_capacitance)
+          if (lightning.readNoiseLevel() == storage.AS3935_noiseFloorLvl)
+            if (lightning.readWatchdogThreshold() == storage.AS3935_watchdogThreshold)
+              if (lightning.readSpikeRejection() == storage.AS3935_spikeRejection)
+                if (lightning.readLightningThreshold() == storage.AS3935_lightningThresh)
+                  if (lightning.readDivRatio() == storage.AS3935_divisionRatio)
+                    result = true;
+
   if (!doCheck) result = true;
   Serial.println();
   return result;
