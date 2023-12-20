@@ -937,18 +937,15 @@ void setup() {
     esp_restart();
   }
 
+  lightning.resetSettings();
+  tft.print(F("."));
+  delay(1000);
   lightning.calibrateOsc();
   tft.println(F("Set detector params"));
   bool setAS3935 = check_AS3935(1);
   while (!setAS3935) {
-    lightning.resetSettings();
-    tft.print(F("."));
-    delay(1000);
-    lightning.calibrateOsc();
-
     lightning.maskDisturber(storage.AS3935_distMode);
     lightning.setIndoorOutdoor(storage.AS3935_doorMode == INDOOR?INDOOR:OUTDOOR);
-    lightning.setIndoorOutdoor(OUTDOOR);
     lightning.setNoiseLevel(storage.AS3935_noiseFloorLvl);
     lightning.watchdogThreshold(storage.AS3935_watchdogThreshold);
     lightning.spikeRejection(storage.AS3935_spikeRejection);
