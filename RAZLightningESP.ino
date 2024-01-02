@@ -215,15 +215,15 @@ void printStat(int dispGraph) {
   tft.print(pulses);
   tft.print(F("/"));
   tft.print(distPulses);
-  if (dispGraph == dispExamples) printGraph(examples, ExampleCounter, ExampleScale, TFT_BLUE, "Examples");
-  if (dispGraph == dispMinute) printGraph(minutes, 60, 12, TFT_BLUE, "Minutes");
-  if (dispGraph == dispHour) printGraph(hours, 24, 12, TFT_PURPLE, "Hours");
+  if (dispGraph == dispExamples) printGraph(examples, ExampleCounter, ExampleScale, TFT_GREEN, "Examples");
+  if (dispGraph == dispMinute) printGraph(minutes, 60, 12, TFT_YELLOW, "Minutes");
+  if (dispGraph == dispHour) printGraph(hours, 24, 12, TFT_ORANGE, "Hours");
   if (dispGraph == dispDay) printGraph(days, 30, 6, TFT_DARKCYAN, "Days");
 }
 
 void printGraph(byte graphArray[], int lenArray, int scale, uint32_t lColor, String gHeader){
 
-  tft.fillRect(0,130,320,110,TFT_WHITE);
+  tft.fillRect(0,130,320,110,TFT_BLACK);
   tft.drawLine(20,220,20,140,lColor);
   tft.drawLine(20,220,290,220,lColor);
   tft.setTextSize(2);
