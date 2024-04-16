@@ -1,4 +1,5 @@
 // *************************************************************************************
+//  V4.2  IP info on Info screen
 //  V4.1  Inbouw MQTT switch & Strikes teller Frank
 //  V4.0  Ombouw naar standaard tft print
 //  Placed on GITHUB Aug. 1 2018
@@ -86,8 +87,8 @@ typedef struct {  // WiFi Access
   const char *PASSWORD;
 } wlanSSID;
 
-#include "RDK_Settings.h";
-// #include "All_Settings.h";
+//#include "RDK_Settings.h";
+#include "All_Settings.h";
 
 char receivedString[128];
 char chkGS[3] = "GS";
@@ -189,6 +190,12 @@ void printInfo() {
   tft.setCursor(0, (9 * lineHeight)+15);
   tft.print(F("Boot:"));
   printTime(boot_time,TFT_WHITE,false);
+  tft.setCursor(0, (10 * lineHeight)+15);
+  tft.print(F("WiFi:"));
+  tft.print(WiFi.SSID());
+  tft.setCursor(0, (11 * lineHeight)+15);
+  tft.print(F("MyIP:"));
+  tft.print(WiFi.localIP());
 }
 
 void printStat(int dispGraph) {
