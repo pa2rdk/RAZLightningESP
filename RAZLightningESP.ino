@@ -1,4 +1,5 @@
 // *************************************************************************************
+//  V4.3  Auto backlight
 //  V4.2  IP info on Info screen
 //  V4.1  Inbouw MQTT switch & Strikes teller Frank
 //  V4.0  Ombouw naar standaard tft print
@@ -106,8 +107,9 @@ uint16_t pulses = 0;
 uint16_t distPulses = 0;
 byte minuteBeeped = 0;
 int majorVersion = 4;
-int minorVersion = 0;  //Eerste uitlevering 15/11/2017
+int minorVersion = 3;  //Eerste uitlevering 15/11/2017
 int updCounter = 0;
+long DisplayOnTime = millis();
 
 struct histData {
   byte dw;
@@ -340,12 +342,20 @@ void loop() {
     }
   }
   
+  if (millis()-DisplayOnTime>30000){
+    turnOnOffLed("Off");
+    DisplayOnTime = millis();
+  }
+
   fromSource = FROMNOTHING;
 
   uint16_t touchX = 0, touchY = 0;
   bool pressed = tft.getTouch(&touchX, &touchY);
   bool doMenu=false;
   if (pressed){
+    turnOnOffLed("On");
+    DisplayOnTime = millis();
+
     Serial.printf("Position x:%d, y:%d\r\n",touchX, touchY);
     
     if (touchX>310 && touchY<10) esp_restart();
@@ -361,6 +371,9 @@ void loop() {
 
   int intVal = 0;
   if (digitalRead(AS3935_intPin) == HIGH) {
+    turnOnOffLed("On");
+    DisplayOnTime = millis();
+
     fromSource = FROMLIGHTNING;
     intVal = lightning.readInterruptReg();
     Serial.printf("Lightning interrupt:%d\r\n",intVal);
@@ -383,6 +396,11 @@ void loadConfig() {
   if (EEPROM.read(offsetEEPROM + 0) == storage.chkDigit)
     for (unsigned int t = 0; t < sizeof(storage); t++)
       *((char *)&storage + t) = EEPROM.read(offsetEEPROM + t);
+}
+
+void turnOnOffLed(String ledStatus){
+  Serial.printf("Backlight turned %s.\r\n", ledStatus);
+  digitalWrite(LED,ledStatus=="On"?0:1);
 }
 
 void printConfig() {
@@ -879,7 +897,7 @@ void setup() {
   pinMode(BEEPER, OUTPUT);
   pinMode(LED, OUTPUT);
   pinMode(AS3935_intPin, INPUT);
-  digitalWrite(LED, 0);
+  turnOnOffLed("On");
 
   configure_timer();
 
