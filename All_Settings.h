@@ -1,5 +1,5 @@
 StoreStruct storage = {
-  '#',                  // chkDigit;
+  '@',                  // chkDigit;
   "yourSSID",           // ESP_SSID[16];
   "yourWiFiPass",       // ESP_PASS[27];
   "Pi4RAZ",             // MyCall[10];

@@ -1,4 +1,5 @@
 // *************************************************************************************
+//  V4.6  OTA
 //  V4.3  Auto backlight
 //  V4.2  IP info on Info screen
 //  V4.1  Inbouw MQTT switch & Strikes teller Frank
@@ -20,7 +21,7 @@
 #include "Free_Fonts.h" // Include the header file attached to this sketch
 #include <TFT_eSPI.h>   // https://github.com/Bodmer/TFT_eSPI
 #include "NTP_Time.h"
-
+#include <RDKOTA.h>
 
 #define LED           14
 #define lineHeight    18
@@ -60,6 +61,9 @@
 #define EEPROM_SIZE   250
 #define TIMEZONE euCET
 
+#define OTAHOST      "https://www.rjdekok.nl/Updates/RAZLightningESP"
+#define VERSION      "v4.5"
+
 struct StoreStruct {
   byte chkDigit;
   char ESP_SSID[25];
@@ -88,8 +92,8 @@ typedef struct {  // WiFi Access
   const char *PASSWORD;
 } wlanSSID;
 
-//#include "RDK_Settings.h";
-#include "All_Settings.h";
+#include "RDK_Settings.h";
+//#include "All_Settings.h";
 
 char receivedString[128];
 char chkGS[3] = "GS";
@@ -139,6 +143,7 @@ TFT_eSPI tft = TFT_eSPI();  // Invoke custom library
 WiFiClient net;
 MQTTClient client;
 HTTPClient http;
+RDKOTA rdkOTA(OTAHOST);
 hw_timer_t *timeTimer = NULL;
 
 void dispData() {
@@ -910,7 +915,7 @@ void setup() {
   Serial.println(F("Start tft"));
   tft.begin();
   tft.setRotation(screenRotation);
-  uint16_t calData[5] = { 304, 3493, 345, 3499, 4 };
+  uint16_t calData[5] = { 304, 3493, 345, 3499, 7 };
   tft.setTouch(calData);
 
   tft.fillScreen(TFT_BLACK);
@@ -1012,6 +1017,13 @@ void setup() {
   wifiMulti.addAP(storage.ESP_SSID,storage.ESP_PASS);
 
   if (check_connection()){
+    if (rdkOTA.checkForUpdate(VERSION)){
+      if (questionBox("Installeer update", TFT_WHITE, TFT_NAVY, 5, 100, 310, 48)){
+        messageBox("Installing update", TFT_YELLOW, TFT_NAVY, 5, 100, 310, 48);
+        rdkOTA.installUpdate();
+      } 
+    }
+
     getNTPData();
     boot_time = local_time;
     sendToSite(0, 0);
@@ -1137,4 +1149,67 @@ void getNTPData() {
     syncTime();
     local_time = TIMEZONE.toLocal(now(), &tz1_Code);   
   }
+}
+
+/***************************************************************************************
+**                          Draw messagebox with message
+***************************************************************************************/
+void messageBox(const char *msg, uint16_t fgcolor, uint16_t bgcolor) {
+  messageBox(msg, fgcolor, bgcolor, 5, 240, 230, 24);
+}
+
+void messageBox(const char *msg, uint16_t fgcolor, uint16_t bgcolor, int x, int y, int w, int h) {
+  uint16_t current_textcolor = tft.textcolor;
+  uint16_t current_textbgcolor = tft.textbgcolor;
+
+  //tft.loadFont(AA_FONT_SMALL);
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(fgcolor, bgcolor);
+  tft.fillRoundRect(x, y, w, h, 5, fgcolor);
+  tft.fillRoundRect(x + 2, y + 2, w - 4, h - 4, 5, bgcolor);
+  tft.setTextPadding(tft.textWidth(msg));
+  tft.drawString(msg, w/2, y + (h / 2));
+  tft.setTextColor(current_textcolor, current_textbgcolor);
+  tft.unloadFont();
+}
+
+bool questionBox(const char *msg, uint16_t fgcolor, uint16_t bgcolor, int x, int y, int w, int h) {
+  uint16_t current_textcolor = tft.textcolor;
+  uint16_t current_textbgcolor = tft.textbgcolor;
+
+  //tft.loadFont(AA_FONT_SMALL);
+  tft.setTextDatum(MC_DATUM);
+  tft.setTextColor(fgcolor, bgcolor);
+  tft.fillRoundRect(x, y, w, h, 5, fgcolor);
+  tft.fillRoundRect(x + 2, y + 2, w - 4, h - 4, 5, bgcolor);
+  tft.setTextPadding(tft.textWidth(msg));
+  tft.drawString(msg, w/2, y + (h / 4));
+
+  tft.fillRoundRect(x + 4, y + (h/2) - 2, (w - 12)/2, (h - 4)/2, 5, TFT_GREEN);
+  tft.setTextColor(fgcolor, TFT_GREEN);
+  tft.setTextPadding(tft.textWidth("Yes"));
+  tft.drawString("Yes", x + 4 + ((w - 12)/4),y + (h/2) - 2 + (h/4));
+  tft.fillRoundRect(x + (w/2) + 2, y + (h/2) - 2, (w - 12)/2, (h - 4)/2, 5, TFT_RED);
+  tft.setTextColor(fgcolor, TFT_RED);
+  tft.setTextPadding(tft.textWidth("No"));
+  tft.drawString("No", x + (w/2) + 2 + ((w - 12)/4),y + (h/2) - 2 + (h/4));
+  Serial.printf("Yes = x:%d,y:%d,w:%d,h:%d\r\n",x + 4, y + (h/2) - 2, (w - 12)/2, (h - 4)/2);
+  Serial.printf("No  = x:%d,y:%d,w:%d,h:%d\r\n",x + (w/2) + 2, y + (h/2) - 2, (w - 12)/2, (h - 4)/2);
+  tft.setTextColor(current_textcolor, current_textbgcolor);
+  tft.unloadFont();
+
+  uint16_t touchX = 0, touchY = 0;
+
+  long startWhile = millis();
+  while (millis()-startWhile<30000) {
+    bool pressed = tft.getTouch(&touchX, &touchY);
+    if (pressed){
+      Serial.printf("Pressed = x:%d,y:%d\r\n",touchX,touchY);
+      if (touchY>=y + (h/2) - 2 && touchY<=y + (h/2) - 2 + ((h - 4)/2)){
+        if (touchX>=x + 4 && touchX<=x + 4 + ((w - 12)/2)) return true;
+        if (touchX>=x + (w/2) + 2 && touchX<=x + (w/2) + 2 + ((w - 12)/2)) return false;
+      }
+    }
+  }
+  return false;
 }
