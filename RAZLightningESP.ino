@@ -1,4 +1,5 @@
 // *************************************************************************************
+//  V4.7  Fixed IN/OUTDOOR
 //  V4.6  OTA
 //  V4.3  Auto backlight
 //  V4.2  IP info on Info screen
@@ -62,7 +63,7 @@
 #define TIMEZONE euCET
 
 #define OTAHOST      "https://www.rjdekok.nl/Updates/RAZLightningESP"
-#define VERSION      "v4.5"
+#define VERSION      "v4.7"
 
 struct StoreStruct {
   byte chkDigit;
@@ -92,8 +93,8 @@ typedef struct {  // WiFi Access
   const char *PASSWORD;
 } wlanSSID;
 
-#include "RDK_Settings.h";
-//#include "All_Settings.h";
+//#include "RDK_Settings.h"
+#include "All_Settings.h"
 
 char receivedString[128];
 char chkGS[3] = "GS";
@@ -188,8 +189,7 @@ void printInfo() {
   tft.print(storage.MyCall);
   tft.setCursor(0, (7 * lineHeight)+15);
   tft.print(F("Mode:"));
-  if (storage.AS3935_doorMode == INDOOR) tft.print(F("Indoor"));
-  else tft.print(F("Outdoor"));
+  if (storage.AS3935_doorMode == INDOOR) tft.print(F("Indoor")); else tft.print(F("Outdoor"));
   tft.setCursor(0, (8 * lineHeight)+15);
   tft.print(F("Dist:"));
   if (storage.AS3935_distMode == 1) tft.print(F("Enabled"));
@@ -532,7 +532,9 @@ void setSettings(bool doAsk) {
   Serial.print(F("): "));
   if (doAsk == 1) {
     i = getNumericValue();
-    if (receivedString[0] != 0) storage.AS3935_doorMode = i==1?OUTDOOR:INDOOR;
+    if (receivedString[0] != 0){
+      if (i == 1) storage.AS3935_doorMode = OUTDOOR; else storage.AS3935_doorMode=INDOOR;
+    } 
   }
   Serial.println();
 
@@ -549,7 +551,7 @@ void setSettings(bool doAsk) {
   }
   Serial.println();
 
-  Serial.print(F("Capacity (8, 16, 24, 32...120)("));
+  Serial.print(F("Capacity (0, 8, 16, 24, 32...120)("));
   Serial.print(storage.AS3935_capacitance);
   Serial.print(F("):"));
   if (doAsk == 1) {
@@ -558,7 +560,7 @@ void setSettings(bool doAsk) {
   }
   Serial.println();
 
-  Serial.print(F("Division ratio (32, 64, or 128)("));
+  Serial.print(F("Division ratio (16, 32, 64, or 128)("));
   Serial.print(storage.AS3935_divisionRatio);
   Serial.print(F("):"));
   if (doAsk == 1) {
