@@ -18,7 +18,8 @@ StoreStruct storage = {
   2,                    // AS3935_spikeRejection;
   1,                    // AS3935_lightningThresh;
   2,                    // beeperCnt;
-  0                     // dispScreen;
+  0,                    // dispScreen;
+  1                     // calibrate;  
 };
 
 wlanSSID wifiNetworks[]{
