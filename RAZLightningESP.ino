@@ -1,4 +1,5 @@
 // *************************************************************************************
+//  V5.3  Noisefloor levels aangepast
 //  V5.2  AutoTune - Finetuning
 //  V5.0  AutoTune - Thanks to PA3CNO
 //  V4.7  Fixed IN/OUTDOOR
@@ -66,7 +67,7 @@
 #define TIMEZONE euCET
 
 #define OTAHOST "https://www.rjdekok.nl/Updates/RAZLightningESP"
-#define VERSION "v5.2"
+#define VERSION "v5.3"
 
 #define PCNT_TEST_UNIT PCNT_UNIT_0  // Use Pulse Count Unit 0
 #define PCNT_H_LIM_VAL 32767        // Upper limit 32767
@@ -590,12 +591,12 @@ void setSettings(bool doAsk) {
   }
   Serial.println();
 
-  Serial.print(F("Noiselevel (1 - 8) ("));
+  Serial.print(F("Noiselevel (0 - 7) ("));
   Serial.print(storage.AS3935_noiseFloorLvl);
   Serial.print(F("):"));
   if (doAsk == 1) {
     i = getNumericValue();
-    if (receivedString[0] != 0) storage.AS3935_noiseFloorLvl = i;
+    if (receivedString[0] != 0 && i>=0 && i <8) storage.AS3935_noiseFloorLvl = i;
   }
   Serial.println();
 
