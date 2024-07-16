@@ -1,4 +1,5 @@
 // *************************************************************************************
+//  V6.0  WhatsApp implemented
 //  V5.3  Noisefloor levels aangepast
 //  V5.2  AutoTune - Finetuning
 //  V5.0  AutoTune - Thanks to PA3CNO
@@ -22,6 +23,7 @@
 #include <MQTT.h>
 #include <SPI.h>
 #include "driver/pcnt.h"
+#include <UrlEncode.h>
 
 #include "Free_Fonts.h"  // Include the header file attached to this sketch
 #include <TFT_eSPI.h>    // https://github.com/Bodmer/TFT_eSPI
@@ -63,11 +65,11 @@
 #define ExampleMax 18
 
 #define offsetEEPROM 0x10
-#define EEPROM_SIZE 250
+#define EEPROM_SIZE 400
 #define TIMEZONE euCET
 
 #define OTAHOST "https://www.rjdekok.nl/Updates/RAZLightningESP"
-#define VERSION "v5.3"
+#define VERSION "v6.0"
 
 #define PCNT_TEST_UNIT PCNT_UNIT_0  // Use Pulse Count Unit 0
 #define PCNT_H_LIM_VAL 32767        // Upper limit 32767
@@ -85,6 +87,10 @@ struct StoreStruct {
   char mqtt_subject[25];
   int mqtt_port;
   bool use_MQTT;
+  bool useWapp;
+  char wappPhone[15];
+  char wappAPI[35];
+  int wappInterval;
   byte AS3935_doorMode;
   byte AS3935_distMode;
   byte AS3935_capacitance;
@@ -96,6 +102,9 @@ struct StoreStruct {
   byte beeperCnt;
   byte dispScreen;
   bool calibrate;
+  bool isDebug;  
+  bool doRotate;
+  bool rotateTouch;
 };
 
 typedef struct {  // WiFi Access
@@ -123,6 +132,7 @@ uint16_t distPulses = 0;
 byte minuteBeeped = 0;
 int updCounter = 0;
 long DisplayOnTime = millis();
+long lastWappMessage = millis();
 
 int16_t counter = 0;  // Pulse counter - max value 32767
 //float frequency = 0;
@@ -384,7 +394,7 @@ void loop() {
 
     Serial.printf("Position x:%d, y:%d\r\n", touchX, touchY);
 
-    if (touchX > 310 && touchY < 10) esp_restart();
+    if (touchY<50 && touchX<50) ESP.restart();
 
     SingleBeep(1);
     doMenu = true;
@@ -544,12 +554,58 @@ void setSettings(bool doAsk) {
     Serial.println();
   }
 
+  Serial.print(F("Use WhatsApp (0 -1) ("));
+  Serial.print(storage.useWapp);
+  Serial.print(F("):"));
+  if (doAsk == 1) {
+    i = getNumericValue();
+    if (receivedString[0] != 0) storage.useWapp = i;
+  }
+  Serial.println();
+
+  if (storage.useWapp){
+    Serial.print(F("WhatsApp phone ("));
+    Serial.print(storage.wappPhone);
+    Serial.print(F("):"));
+    if (doAsk == 1) {
+      getStringValue(49);
+      if (receivedString[0] != 0) {
+        storage.wappPhone[0] = 0;
+        strcat(storage.wappPhone, receivedString);
+      }
+    }
+    Serial.println();
+
+    Serial.print(F("WhatsApp API Key ("));
+    Serial.print(storage.wappAPI);
+    Serial.print(F("):"));
+    if (doAsk == 1) {
+      getStringValue(49);
+      if (receivedString[0] != 0) {
+        storage.wappAPI[0] = 0;
+        strcat(storage.wappAPI, receivedString);
+      }
+    }
+    Serial.println();
+
+    Serial.print(F("WhatsApp interval ("));
+    Serial.print(storage.wappInterval);
+    Serial.print(F("):"));
+    if (doAsk == 1) {
+      i = getNumericValue();
+      if (receivedString[0] != 0) storage.wappInterval = i;
+    }
+    Serial.println();
+  }
+
   Serial.print(F("Indoors=0 or Outdoors=1 ("));
   if (storage.AS3935_doorMode == INDOOR) {
     Serial.print(F("Indoors"));
   } else {
     Serial.print(F("Outdoors"));
   }
+  Serial.print(" - ");
+  Serial.print(storage.AS3935_doorMode); 
   Serial.print(F("): "));
   if (doAsk == 1) {
     i = getNumericValue();
@@ -658,6 +714,44 @@ void setSettings(bool doAsk) {
   }
   Serial.println();
 
+  Serial.print(F("Debugmode (0/1) ("));
+  if (storage.isDebug == 0) {
+    Serial.print(F("Disabled"));
+  } else {
+    Serial.print(F("Enabled"));
+  }
+  Serial.print(F("): "));
+  if (doAsk == 1) {
+    i = getNumericValue();
+    if (receivedString[0] != 0) storage.isDebug = i;
+  }
+  Serial.println();
+
+  Serial.print(F("Rotate screen (0/1) ("));
+  if (storage.doRotate == 0) {
+    Serial.print(F("Disabled"));
+  } else {
+    Serial.print(F("Enabled"));
+  }
+  Serial.print(F("): "));
+  if (doAsk == 1) {
+    i = getNumericValue();
+    if (receivedString[0] != 0) storage.doRotate = i;
+  }
+  Serial.println();
+
+  Serial.print(F("Rotate touch (0/1) ("));
+  if (storage.rotateTouch == 0) {
+    Serial.print(F("Disabled"));
+  } else {
+    Serial.print(F("Enabled"));
+  }
+  Serial.print(F("): "));
+  if (doAsk == 1) {
+    i = getNumericValue();
+    if (receivedString[0] != 0) storage.rotateTouch = i;
+  }
+  Serial.println();
 
   Serial.println();
 
@@ -818,10 +912,16 @@ void handleLighting(uint8_t int_src) {
       SingleBeep(5);
       minuteBeeped++;
       char buff[20];
-      sprintf(buff, "%2d/%2d/%2d %2d:%2d:%2d", day(local_time), month(local_time), year(local_time), hour(local_time), minute(local_time), second(local_time));
+      sprintf(buff, "%02d/%02d/%02d %02d:%02d:%02d", day(local_time), month(local_time), year(local_time), hour(local_time), minute(local_time), second(local_time));
       if (storage.use_MQTT) {
         client.publish(String(storage.mqtt_subject) + "/lightning/datetime", buff);
         client.publish(String(storage.mqtt_subject) + "/lightning/distance", (String)lightning_dist_km + "KM");
+      }
+      if (storage.useWapp){
+        if (millis()-lastWappMessage>storage.wappInterval*1000){
+          sendWapp("Lightning at " + (String)lightning_dist_km + "KM (" + String(buff)+")");
+          lastWappMessage = millis();
+        }
       }
     }
 
@@ -864,6 +964,30 @@ void handleLighting(uint8_t int_src) {
   }
   //lightning.clearStatistics(true);
   delay(500);
+}
+
+void sendWapp(String text){
+  // Data to send with HTTP POST
+  String url = "https://api.callmebot.com/whatsapp.php?phone=" + String(storage.wappPhone) + "&apikey=" + String(storage.wappAPI) + "&text=" + urlEncode(text);
+  Serial.println(url);
+  HTTPClient http;
+  http.begin(url);
+
+  // Specify content-type header
+  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
+  // Send HTTP POST request
+  int httpResponseCode = http.POST(url);
+  if (httpResponseCode == 200) {
+    Serial.println("WHATSAPP Message sent successfully");
+  }
+  else {
+    Serial.println("Error sending the WHATSAPP message");
+    Serial.print("HTTP response code: ");
+    Serial.println(httpResponseCode);
+  }
+  // Free resources
+  http.end();
 }
 
 void moveMinutes() {
@@ -956,18 +1080,8 @@ void setup() {
   Serial.printf("AS3935 Franklin Lightning Detector %s\r\n", VERSION);
   Serial.println(F("beginning boot procedure...."));
   Serial.println(F("Start tft"));
-  tft.begin();
-  tft.setRotation(screenRotation);
-  uint16_t calData[5] = { 304, 3493, 345, 3499, 7 };
-  tft.setTouch(calData);
-
-  tft.fillScreen(TFT_BLACK);
-  printLogo(0);
 
   if (!EEPROM.begin(EEPROM_SIZE)) {
-    tft.fillScreen(TFT_BLACK);
-    tft.setCursor(0, 0);
-    tft.println(F("failed to initialise EEPROM"));
     Serial.println(F("failed to initialise EEPROM"));
     while (1)
       ;
@@ -979,6 +1093,15 @@ void setup() {
 
   loadConfig();
   printConfig();
+
+  tft.begin();
+  tft.init();
+  tft.setRotation(storage.doRotate?1:3);
+  uint16_t calData[5] = { 304, 3493, 345, 3499, storage.rotateTouch?7:1 };
+  tft.setTouch(calData);
+
+  tft.fillScreen(TFT_BLACK);
+  printLogo(0);
 
   delay(1000);
   tft.fillScreen(TFT_BLACK);
@@ -1095,10 +1218,14 @@ void setup() {
     boot_time = local_time;
     sendToSite(0, 0);
     char buff[20];
-    sprintf(buff, "%2d/%2d/%2d %2d:%2d:%2d", day(boot_time), month(boot_time), year(boot_time), hour(boot_time), minute(boot_time), second(boot_time));
+    sprintf(buff, "%02d/%02d/%02d %02d:%02d:%02d", day(boot_time), month(boot_time), year(boot_time), hour(boot_time), minute(boot_time), second(boot_time));
 
     if (storage.use_MQTT) {
       client.publish(String(storage.mqtt_subject) + "/started", buff);
+    }
+
+    if (storage.useWapp){
+      sendWapp("Lightningdetector booted at " + String(buff));
     }
   }
   tft.fillScreen(TFT_BLACK);
